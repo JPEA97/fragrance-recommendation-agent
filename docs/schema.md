@@ -11,6 +11,8 @@ Core tables:
 5. fragrance_tags
 6. collection_items
 
+---
+
 ## users
 
 Stores app users who can authenticate and own fragrance collections.
@@ -33,13 +35,13 @@ Stores app users who can authenticate and own fragrance collections.
 ### Notes
 
 - email should be normalized to lowercase in the application layer
-- passwords are never stores in plaintext
+- passwords are never stored in plaintext
 
 ---
 
 ## brands
 
-Store fragrance designer brands
+Stores fragrance designer brands.
 
 ### Columns
 
@@ -55,7 +57,7 @@ Store fragrance designer brands
 
 ## fragrances
 
-Stores the fragrance catalog
+Stores the fragrance catalog.
 
 ### Columns
 
@@ -70,7 +72,8 @@ Stores the fragrance catalog
 
 ### Constraints
 
-- release_year must be null or between less than 2100
+- unique(brand_id, name)
+- release_year must be null or between 1000 and 2100
 - gender_category must be null or one of: masculine, feminine, unisex
 
 ### Indexes
