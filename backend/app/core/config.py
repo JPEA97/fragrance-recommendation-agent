@@ -1,0 +1,17 @@
+# This file defines a single settings object for the app.
+# BaseSettings lets values come from environment variables or a .env file.
+# That way, later we can change the database URL or turn debug off without editing Python code.
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    app_name: str = "Fragrance Collection API"
+    app_version: str = "0.1.0"
+    debug: bool = True
+    database_url: str = "postgresql://postgres:postgres@localhost:5432/fragrance_db"
+
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+
+settings = Settings()
