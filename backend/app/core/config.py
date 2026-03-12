@@ -14,4 +14,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
+# creating an instance of Settings class
+# Settings is the blueprint (class)
+# settings is the object created from it, we instantiate it "setting.app_name"
 settings = Settings()
