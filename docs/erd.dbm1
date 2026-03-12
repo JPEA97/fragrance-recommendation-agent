@@ -1,36 +1,71 @@
 Table users {
-  id integer [pk]
-  email varchar
-  username varchar
-  password_hash varchar
+  id integer [pk, increment]
+  email varchar(255) [not null, unique]
+  username varchar(50) [not null, unique]
+  password_hash varchar (255) [not null]
 }
 
 Table brands {
-  id integer [pk]
-  name varchar
+  id integer [pk, increment]
+  name varchar(100) [not null, unique]
+  created_at timestamptz [not null, default: `now()`]
 }
 
 Table fragrances {
-  id integer [pk]
-  brand_id integer
-  name varchar
+  id integer [pk, increment]
+  brand_id integer [not null]
+  name varchar(150) [not null]
+  release_year integer
+  gender_category varchar(20)
+  description text
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (brand_id, name) [unique]
+    brand_id
+    name
+  }
 }
 
 Table tags {
-  id integer [pk]
-  type varchar
-  name varchar
+  id integer [pk, increment]
+  type varchar(50) [not null]
+  name varchar(50) [not null]
+  created_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (type, name) [unique]
+  }
 }
 
 Table fragrance_tags {
-  fragrance_id integer
-  tag_id integer
+  fragrance_id integer [not null]
+  tag_id integer [not null]
+
+  indexes {
+    (fragrance_id, tag_id) [pk]
+    tag_id
+  }
 }
 
 Table collection_items {
-  id integer [pk]
-  user_id integer
-  fragrance_id integer
+  id integer [pk, increment]
+  user_id integer [not null]
+  fragrance_id integer [not null]
+  ownership_type varchar(20) [not null]
+  ml_remaining numeric(6,2)
+  personal_rating integer
+  last_worn_at timestamptz
+  times_worn integer [not null, default: 0]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (user_id, fragrance_id) [unique]
+    user_id
+    fragrance_id
+  }
 }
 
 Ref: fragrances.brand_id > brands.id
