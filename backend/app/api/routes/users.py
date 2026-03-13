@@ -5,6 +5,8 @@ from app.db.deps import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
 
+from app.core.security import hash_password
+
 router = APIRouter(prefix="/users", tags=["users"])
 
 
@@ -26,7 +28,7 @@ def create_user(payload: UserCreate, db: Session = Depends(get_db)):
     user = User(
         email=payload.email.lower(),
         username=payload.username,
-        password_hash=payload.password,  # temporary, will replace with hashing next
+        password_hash=hash_password(payload.password),
         is_active=True,
     )
 
@@ -37,6 +39,7 @@ def create_user(payload: UserCreate, db: Session = Depends(get_db)):
     return user
 
 
+# Endpoint for user retrieval
 @router.get("/{user_id}", response_model=UserResponse)
 def get_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
