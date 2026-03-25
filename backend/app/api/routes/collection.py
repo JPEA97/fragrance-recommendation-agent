@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -51,15 +53,37 @@ def add_to_collection(
 
 @router.get("/", response_model=list[CollectionItemDetailResponse])
 def get_collection(
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    brand: Optional[str] = None,
+    ownership_type: Optional[str] = Query(
+        default=None,
+        pattern="^(full_bottle|decant|sample)$",
+    ),
+    min_rating: Optional[int] = Query(default=None, ge=1, le=10),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    rows = (
+    query = (
         db.query(CollectionItem, Fragrance, Brand)
         .join(Fragrance, CollectionItem.fragrance_id == Fragrance.id)
         .join(Brand, Fragrance.brand_id == Brand.id)
         .filter(CollectionItem.user_id == current_user.id)
-        .order_by(CollectionItem.created_at.desc())
+    )
+
+    if brand:
+        query = query.filter(Brand.name.ilike(f"%{brand}%"))
+
+    if ownership_type:
+        query = query.filter(CollectionItem.ownership_type == ownership_type)
+
+    if min_rating is not None:
+        query = query.filter(CollectionItem.personal_rating >= min_rating)
+
+    rows = (
+        query.order_by(CollectionItem.created_at.desc())
+        .offset(offset)
+        .limit(limit)
         .all()
     )
 
@@ -74,10 +98,10 @@ def get_collection(
             fragrance={
                 "id": fragrance.id,
                 "name": fragrance.name,
-                "brand": brand.name,
+                "brand": brand_row.name,
             },
         )
-        for item, fragrance, brand in rows
+        for item, fragrance, brand_row in rows
     ]
 
 
