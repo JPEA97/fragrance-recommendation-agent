@@ -222,3 +222,138 @@ The API will be available at:
 
 - App: `http://127.0.0.1:8000`
 - Swagger Docs: `http://127.0.0.1:8000/docs`
+
+---
+
+## Authentication Flow
+
+The API uses JWT-based authentication with the OAuth2 password flow.
+
+### Flow Overview
+
+1. A user registers via `POST /users/`
+2. The user logs in via `POST /auth/login`
+3. The API returns a JWT access token
+4. The token must be included in protected requests:
+
+```http
+Authorization: Bearer <access_token>
+```
+
+### Notes
+
+- The login endpoint uses the OAuth2 `username` field to receive the user's **email**
+- All protected endpoints resolve the authenticated user from the token
+- User ownership is enforced at the query level (e.g. collection items belong only to the authenticated user)
+
+---
+
+## API Endpoints Overview
+
+### Auth
+
+- `POST /users/`  
+  Create a new user
+
+- `POST /auth/login`  
+  Authenticate user and return access token
+
+- `GET /users/me`  
+  Retrieve current authenticated user
+
+---
+
+### Collection
+
+- `POST /collection/`  
+  Add a fragrance to the user’s collection
+
+- `GET /collection/`  
+  Retrieve collection (supports filtering and pagination)
+
+- `GET /collection/{id}`  
+  Retrieve a specific collection item
+
+- `PATCH /collection/{id}`  
+  Update collection item fields
+
+- `DELETE /collection/{id}`  
+  Remove item from collection
+
+---
+
+### Recommendation
+
+- `POST /recommendation/`  
+  Return top 3 fragrance recommendations based on context input
+
+---
+
+## Recommendation Logic
+
+The recommendation engine evaluates each fragrance in the user’s collection using a weighted scoring system.
+
+### Scoring Model
+
+Each fragrance receives a score based on:
+
+- **Context matches**
+  - Occasion → +5
+  - Weather → +5
+  - Season → +3
+  - Time of day → +3
+  - Location type → +3
+
+- **Personal rating**
+  - Added as a bonus (capped)
+
+- **Usage penalty**
+  - Based on `times_worn`
+  - Prevents frequently used fragrances from dominating recommendations
+
+### Selection Rules
+
+- Only fragrances in the user’s collection are considered
+- Results are sorted by score (descending)
+- Top 3 results are returned
+- In case of a tie:
+  - Lower `times_worn` is preferred
+  - If still tied, selection is randomized
+
+### Output
+
+Each recommendation includes:
+
+- fragrance name
+- brand
+- computed relevance
+- human-readable explanation ("reason")
+
+---
+
+## Testing
+
+The project includes integration tests using `pytest` and FastAPI’s `TestClient`.
+
+### Coverage
+
+- Authentication flow
+- Unauthorized access handling
+- Collection ownership enforcement
+- Collection CRUD lifecycle
+- Filtering and pagination
+- Recommendation behavior and ranking logic
+
+### Running tests
+
+From the `backend/` folder:
+
+```bash
+pytest
+```
+
+### Notes
+
+- Tests use a separate test database (SQLite)
+- The application’s database dependency is overridden during tests
+- Each test runs with a clean schema to ensure isolation
