@@ -1,14 +1,12 @@
-import random
 from collections.abc import Iterable
 
 from app.models.brand import Brand
 from app.models.collection_item import CollectionItem
 from app.models.fragrance import Fragrance
-from app.models.tag import Tag
 from app.schemas.recommendation import RecommendationRequest
 
 
-def build_recommendation(rows: Iterable, payload: RecommendationRequest):
+def build_recommendations(rows: Iterable, payload: RecommendationRequest) -> list[dict]:
     grouped = {}
 
     for item, fragrance, brand, tag in rows:
@@ -59,15 +57,12 @@ def build_recommendation(rows: Iterable, payload: RecommendationRequest):
             }
         )
 
-    if not scored:
-        return None
+    scored.sort(
+        key=lambda entry: (
+            entry["score"],
+            -entry["item"].times_worn,
+        ),
+        reverse=True,
+    )
 
-    max_score = max(entry["score"] for entry in scored)
-    top_scored = [entry for entry in scored if entry["score"] == max_score]
-
-    min_times_worn = min(entry["item"].times_worn for entry in top_scored)
-    least_worn = [
-        entry for entry in top_scored if entry["item"].times_worn == min_times_worn
-    ]
-
-    return random.choice(least_worn)
+    return scored[:3]

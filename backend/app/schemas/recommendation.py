@@ -18,4 +18,4 @@ class RecommendationFragranceResponse(BaseModel):
 
 
 class RecommendationResponse(BaseModel):
-    fragrance: RecommendationFragranceResponse
+    fragrances: list[RecommendationFragranceResponse]

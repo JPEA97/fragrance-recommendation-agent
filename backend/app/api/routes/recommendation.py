@@ -10,7 +10,7 @@ from app.models.fragrance_tag import FragranceTag
 from app.models.tag import Tag
 from app.models.user import User
 from app.schemas.recommendation import RecommendationRequest, RecommendationResponse
-from app.services.recommendation import build_recommendation
+from app.services.recommendation import build_recommendations
 
 router = APIRouter(prefix="/recommendation", tags=["recommendation"])
 
@@ -37,7 +37,7 @@ def recommend_fragrance(
             detail="User collection is empty",
         )
 
-    selected = build_recommendation(rows, payload)
+    selected = build_recommendations(rows, payload)
 
     if not selected:
         raise HTTPException(
@@ -46,9 +46,12 @@ def recommend_fragrance(
         )
 
     return RecommendationResponse(
-        fragrance={
-            "id": selected["fragrance"].id,
-            "name": selected["fragrance"].name,
-            "brand": selected["brand"].name,
-        }
+        fragrances=[
+            {
+                "id": entry["fragrance"].id,
+                "name": entry["fragrance"].name,
+                "brand": entry["brand"].name,
+            }
+            for entry in selected
+        ]
     )
