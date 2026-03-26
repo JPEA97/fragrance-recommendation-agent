@@ -23,11 +23,11 @@ The API is designed around a structured backend architecture with authentication
 - Human-readable explanation for each recommendation
 - Filtering and pagination for collection endpoints
 - Consistent API response structure using data envelopes
-- Integration test coverage for:
-  - authentication
-  - collection ownership
-  - collection lifecycle
-  - recommendation logic
+- Standardized API error handling
+- Basic application logging and health check endpoint
+- Test coverage including:
+  - integration tests
+  - unit tests
 
 ---
 
@@ -52,7 +52,7 @@ The backend follows a layered architecture to separate concerns and keep the cod
   - Keep route handlers thin and focused
 
 - **Core (`core`)**
-  - Configuration and security (JWT, hashing, settings)
+  - Configuration, security, logging, and global error handling
 
 - **Database (`db`)**
   - Session management and base model setup
@@ -375,3 +375,13 @@ pytest
 - The application’s database dependency is overridden during tests
 - Each test runs with a clean schema to ensure isolation
 - Recommendation service unit tests run without database or API setup
+
+## Operational Notes
+
+The API includes a lightweight operational layer to improve reliability and inspectability:
+
+- Global exception handlers for standardized error responses
+- Basic application logging for startup, auth events, collection mutations, and recommendation generation
+- Health check endpoint at `/health`
+
+This keeps failure behavior more predictable and makes the backend easier to debug during development and testing.
