@@ -69,7 +69,10 @@ def test_collection_crud_lifecycle_for_owner(
     after_delete_response = client.get(f"/collection/{item_id}", headers=headers)
 
     assert after_delete_response.status_code == 404
-    assert after_delete_response.json()["detail"] == "Collection item not found"
+    assert after_delete_response.json()["error"]["type"] == "http_error"
+    assert (
+        after_delete_response.json()["error"]["message"] == "Collection item not found"
+    )
 
 
 def test_collection_list_filters_work(

@@ -198,7 +198,8 @@ def test_recommendation_returns_404_for_empty_collection(
     )
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "User collection is empty"
+    assert response.json()["error"]["type"] == "http_error"
+    assert response.json()["error"]["message"] == "User collection is empty"
 
 
 def test_recommendation_prefers_lower_times_worn_on_tie(

@@ -59,4 +59,5 @@ def test_login_fails_with_wrong_password(client):
     )
 
     assert login_response.status_code == 401
-    assert login_response.json()["detail"] == "Invalid credentials"
+    assert login_response.json()["error"]["type"] == "http_error"
+    assert login_response.json()["error"]["message"] == "Invalid credentials"

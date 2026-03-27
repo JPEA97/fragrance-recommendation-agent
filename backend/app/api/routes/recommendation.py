@@ -37,6 +37,8 @@ def recommend_fragrance(
         .filter(CollectionItem.user_id == current_user.id)
         .all()
     )
+    # Recommendation candidates are limited to fragrances with tag mappings.
+    # Untagged fragrances are intentionally excluded from recommendation scoring.
 
     if not rows:
         raise HTTPException(
