@@ -25,29 +25,22 @@ def seed_catalog(db: Session) -> None:
 
     for brand_data in catalog["brands"]:
         brand = db.query(Brand).filter(Brand.name == brand_data["name"]).first()
-
         if not brand:
             brand = Brand(name=brand_data["name"])
             db.add(brand)
             db.flush()
-
         brand_map[brand.name] = brand
 
     for tag_data in catalog["tags"]:
         tag = (
             db.query(Tag)
-            .filter(
-                Tag.type == tag_data["type"],
-                Tag.name == tag_data["name"],
-            )
+            .filter(Tag.type == tag_data["type"], Tag.name == tag_data["name"])
             .first()
         )
-
         if not tag:
             tag = Tag(type=tag_data["type"], name=tag_data["name"])
             db.add(tag)
             db.flush()
-
         tag_map[(tag.type, tag.name)] = tag
 
     for fragrance_data in catalog["fragrances"]:
@@ -72,26 +65,29 @@ def seed_catalog(db: Session) -> None:
             )
             db.add(fragrance)
             db.flush()
+        else:
+            fragrance.release_year = fragrance_data["release_year"]
+            fragrance.gender_category = fragrance_data["gender_category"]
+            fragrance.description = fragrance_data["description"]
 
-        for tag_type, tag_name in fragrance_data["tags"]:
-            tag = tag_map[(tag_type, tag_name)]
+        desired_tag_ids = {
+            tag_map[(tag_type, tag_name)].id
+            for tag_type, tag_name in fragrance_data["tags"]
+        }
 
-            existing_link = (
-                db.query(FragranceTag)
-                .filter(
-                    FragranceTag.fragrance_id == fragrance.id,
-                    FragranceTag.tag_id == tag.id,
-                )
-                .first()
-            )
+        existing_links = (
+            db.query(FragranceTag)
+            .filter(FragranceTag.fragrance_id == fragrance.id)
+            .all()
+        )
+        existing_tag_ids = {link.tag_id for link in existing_links}
 
-            if not existing_link:
-                db.add(
-                    FragranceTag(
-                        fragrance_id=fragrance.id,
-                        tag_id=tag.id,
-                    )
-                )
+        for link in existing_links:
+            if link.tag_id not in desired_tag_ids:
+                db.delete(link)
+
+        for tag_id in desired_tag_ids - existing_tag_ids:
+            db.add(FragranceTag(fragrance_id=fragrance.id, tag_id=tag_id))
 
     db.commit()
 
