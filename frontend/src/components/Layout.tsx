@@ -48,6 +48,15 @@ export default function Layout({ children }: { children: ReactNode }) {
             </NavLink>
           </div>
           <div className="flex items-center gap-3">
+            <NavLink
+              to="/about"
+              className={({ isActive }) =>
+                `text-sm font-medium ${isActive ? 'text-indigo-400' : 'text-zinc-400 hover:text-white'}`
+              }
+            >
+              About
+            </NavLink>
+            <span className="text-zinc-700">·</span>
             <span className="text-sm text-zinc-400">{user?.username}</span>
             <button
               onClick={handleLogout}

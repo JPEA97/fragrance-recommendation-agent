@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { register } from '../api/auth'
 import { ApiError } from '../api/client'
@@ -86,6 +86,16 @@ export default function LandingPage() {
             background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)',
           }}
         />
+
+        {/* Top nav */}
+        <div className="absolute top-6 right-8 z-10">
+          <Link
+            to="/about"
+            className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+          >
+            About
+          </Link>
+        </div>
 
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-3xl">
