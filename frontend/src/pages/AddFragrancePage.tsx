@@ -4,6 +4,7 @@ import { getFragrances } from '../api/fragrances'
 import { addToCollection } from '../api/collection'
 import { ApiError } from '../api/client'
 import type { FragranceListItem, OwnershipType } from '../types/api'
+import { getFragranceImage } from '../lib/fragranceImages'
 
 const LIMIT = 20
 
@@ -51,9 +52,18 @@ function AddModal({ fragrance, onClose, onAdded }: AddModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl w-full max-w-sm p-6">
-        <div className="mb-4">
-          <h2 className="font-semibold text-white">{fragrance.name}</h2>
-          <p className="text-sm text-zinc-400">{fragrance.brand}</p>
+        <div className="mb-4 flex items-center gap-3">
+          {getFragranceImage(fragrance.brand, fragrance.name) && (
+            <img
+              src={getFragranceImage(fragrance.brand, fragrance.name)!}
+              alt={fragrance.name}
+              className="w-14 h-14 rounded-xl object-contain bg-zinc-800 border border-zinc-700 p-1.5 shrink-0"
+            />
+          )}
+          <div>
+            <h2 className="font-semibold text-white">{fragrance.name}</h2>
+            <p className="text-sm text-zinc-400">{fragrance.brand}</p>
+          </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -216,7 +226,7 @@ export default function AddFragrancePage() {
         />
       )}
 
-      <div className="mb-6">
+      <div className="sticky top-0 z-10 bg-zinc-950 pb-4 -mx-4 px-4 pt-1">
         <h1 className="text-2xl font-bold text-white mb-4">Add Fragrance</h1>
         <div className="flex gap-3">
           <input
@@ -254,23 +264,45 @@ export default function AddFragrancePage() {
 
       {!loading && fragrances.length > 0 && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {fragrances.map((f) => (
-              <button
-                key={f.id}
-                onClick={() => setSelected(f)}
-                className="text-left bg-zinc-900 border border-zinc-800 rounded-xl p-4 hover:border-indigo-700 hover:shadow-sm transition-all"
-              >
-                <p className="font-semibold text-white truncate">{f.name}</p>
-                <p className="text-sm text-zinc-400 mt-0.5">{f.brand}</p>
-                <div className="mt-2 flex gap-2 text-xs text-zinc-500">
-                  {f.release_year && <span>{f.release_year}</span>}
-                  {f.gender_category && (
-                    <span className="capitalize">{f.gender_category}</span>
-                  )}
-                </div>
-              </button>
-            ))}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {fragrances.map((f) => {
+              const image = getFragranceImage(f.brand, f.name)
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => setSelected(f)}
+                  className="text-left bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-indigo-700 hover:bg-zinc-800/50 transition-all group"
+                >
+                  {/* Image area */}
+                  <div className="h-36 flex items-center justify-center border-b border-zinc-800 group-hover:border-indigo-900 transition-colors bg-zinc-800">
+                    {image ? (
+                      <img
+                        src={image}
+                        alt={f.name}
+                        className="h-full w-full object-contain p-4"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-indigo-950/30">
+                        <span className="text-4xl font-bold text-zinc-500 select-none">
+                          {f.name[0]}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {/* Info */}
+                  <div className="p-3">
+                    <p className="font-semibold text-white text-sm truncate">{f.name}</p>
+                    <p className="text-xs text-zinc-400 mt-0.5 truncate">{f.brand}</p>
+                    <div className="mt-1.5 flex gap-2 text-xs text-zinc-600">
+                      {f.release_year && <span>{f.release_year}</span>}
+                      {f.gender_category && (
+                        <span className="capitalize">{f.gender_category}</span>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              )
+            })}
           </div>
 
           <div className="flex items-center justify-between mt-6 text-sm text-zinc-400">

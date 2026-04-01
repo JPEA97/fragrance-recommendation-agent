@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { getCollectionItem, updateCollectionItem, deleteCollectionItem } from '../api/collection'
 import { ApiError } from '../api/client'
 import type { CollectionItemDetail, CollectionItemUpdate, OwnershipType } from '../types/api'
+import { getFragranceImage } from '../lib/fragranceImages'
 
 const ownershipOptions: { value: OwnershipType; label: string }[] = [
   { value: 'full_bottle', label: 'Full Bottle' },
@@ -109,9 +110,18 @@ export default function CollectionItemPage() {
         ← My Collection
       </button>
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">{item.fragrance.name}</h1>
-        <p className="text-zinc-400 mt-0.5">{item.fragrance.brand}</p>
+      <div className="mb-6 flex items-center gap-5">
+        {getFragranceImage(item.fragrance.brand, item.fragrance.name) && (
+          <img
+            src={getFragranceImage(item.fragrance.brand, item.fragrance.name)!}
+            alt={item.fragrance.name}
+            className="w-24 h-24 rounded-2xl object-contain bg-zinc-900 border border-zinc-800 p-2"
+          />
+        )}
+        <div>
+          <h1 className="text-2xl font-bold text-white">{item.fragrance.name}</h1>
+          <p className="text-zinc-400 mt-0.5">{item.fragrance.brand}</p>
+        </div>
       </div>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-5">

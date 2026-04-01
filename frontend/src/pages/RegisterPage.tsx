@@ -20,7 +20,7 @@ export default function RegisterPage() {
     try {
       await register({ email, username, password })
       await login(email, password)
-      navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)

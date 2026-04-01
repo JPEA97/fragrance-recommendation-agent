@@ -8,18 +8,22 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   function handleLogout() {
     logout()
-    navigate('/login')
+    navigate('/')
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950">
-      <nav className="bg-zinc-900 border-b border-zinc-800">
+    <div className="relative min-h-screen bg-zinc-950 overflow-hidden">
+      {/* Subtle ambient glow — ties inner pages to the landing/dashboard vibe */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -10%, #1e1b4b33 0%, transparent 70%)' }}
+      />
+      <nav className="relative bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <span className="font-semibold text-white tracking-tight">S.O.T.D.</span>
             <NavLink
-              to="/"
-              end
+              to="/dashboard"
               className={({ isActive }) =>
                 `text-sm font-medium ${isActive ? 'text-indigo-400' : 'text-zinc-400 hover:text-white'}`
               }
@@ -54,7 +58,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           </div>
         </div>
       </nav>
-      <main className="max-w-4xl mx-auto px-4 py-8">{children}</main>
+      <main className="relative max-w-4xl mx-auto px-4 py-8">{children}</main>
     </div>
   )
 }

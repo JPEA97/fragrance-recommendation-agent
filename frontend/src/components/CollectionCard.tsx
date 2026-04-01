@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import type { CollectionItemDetail, OwnershipType } from '../types/api'
+import { getFragranceImage } from '../lib/fragranceImages'
 
 const ownershipLabels: Record<OwnershipType, string> = {
   full_bottle: 'Full Bottle',
@@ -19,16 +20,26 @@ interface Props {
 
 export default function CollectionCard({ item }: Props) {
   const navigate = useNavigate()
+  const image = getFragranceImage(item.fragrance.brand, item.fragrance.name)
 
   return (
     <button
       onClick={() => navigate(`/collection/${item.id}`)}
-      className="w-full text-left bg-zinc-900 border border-zinc-800 rounded-xl p-4 hover:border-indigo-700 hover:shadow-sm transition-all"
+      className="w-full text-left bg-zinc-900 border border-zinc-800 rounded-xl p-4 hover:border-indigo-700 hover:bg-zinc-800/50 hover:shadow-sm transition-all"
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="font-semibold text-white truncate">{item.fragrance.name}</p>
-          <p className="text-sm text-zinc-400 mt-0.5">{item.fragrance.brand}</p>
+        <div className="flex items-start gap-3 min-w-0">
+          {image && (
+            <img
+              src={image}
+              alt={item.fragrance.name}
+              className="shrink-0 w-12 h-12 rounded-lg object-contain bg-zinc-800 p-1"
+            />
+          )}
+          <div className="min-w-0">
+            <p className="font-semibold text-white truncate">{item.fragrance.name}</p>
+            <p className="text-sm text-zinc-400 mt-0.5">{item.fragrance.brand}</p>
+          </div>
         </div>
         <span
           className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full ${ownershipColors[item.ownership_type]}`}
