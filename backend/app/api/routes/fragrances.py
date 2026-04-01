@@ -1,8 +1,8 @@
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
 from sqlalchemy import func
+from sqlalchemy.orm import Session
 
 from app.db.deps import get_db
 from app.models.brand import Brand
@@ -11,6 +11,14 @@ from app.schemas.common import ItemEnvelope, ListEnvelope, MetaResponse
 from app.schemas.fragrance import FragranceDetailResponse, FragranceListItemResponse
 
 router = APIRouter(prefix="/fragrances", tags=["fragrances"])
+
+
+def normalize_text_expr(column):
+    return func.replace(
+        func.replace(func.unaccent(column), "'", ""),
+        " ",
+        "",
+    )
 
 
 @router.get("/", response_model=ListEnvelope)
@@ -24,13 +32,15 @@ def list_fragrances(
     query = db.query(Fragrance, Brand).join(Brand, Fragrance.brand_id == Brand.id)
 
     if brand:
-        normalized_brand = brand.strip()
-        query = query.filter(func.unaccent(Brand.name).ilike(f"%{normalized_brand}%"))
+        normalized_brand = brand.strip().replace("'", "").replace(" ", "")
+        query = query.filter(
+            normalize_text_expr(Brand.name).ilike(f"%{normalized_brand}%")
+        )
 
     if search:
-        normalized_search = search.strip()
+        normalized_search = search.strip().replace("'", "").replace(" ", "")
         query = query.filter(
-            func.unaccent(Fragrance.name).ilike(f"%{normalized_search}%")
+            normalize_text_expr(Fragrance.name).ilike(f"%{normalized_search}%")
         )
 
     rows = (
