@@ -12,16 +12,16 @@ export default function Layout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-zinc-950">
+      <nav className="bg-zinc-900 border-b border-zinc-800">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <span className="font-semibold text-gray-900 tracking-tight">Fragrance</span>
+            <span className="font-semibold text-white tracking-tight">S.O.T.D.</span>
             <NavLink
               to="/"
               end
               className={({ isActive }) =>
-                `text-sm font-medium ${isActive ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-900'}`
+                `text-sm font-medium ${isActive ? 'text-indigo-400' : 'text-zinc-400 hover:text-white'}`
               }
             >
               Dashboard
@@ -29,7 +29,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <NavLink
               to="/collection"
               className={({ isActive }) =>
-                `text-sm font-medium ${isActive ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-900'}`
+                `text-sm font-medium ${isActive ? 'text-indigo-400' : 'text-zinc-400 hover:text-white'}`
               }
             >
               My Collection
@@ -37,17 +37,17 @@ export default function Layout({ children }: { children: ReactNode }) {
             <NavLink
               to="/collection/add"
               className={({ isActive }) =>
-                `text-sm font-medium ${isActive ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-900'}`
+                `text-sm font-medium ${isActive ? 'text-indigo-400' : 'text-zinc-400 hover:text-white'}`
               }
             >
               Add Fragrance
             </NavLink>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500">{user?.username}</span>
+            <span className="text-sm text-zinc-400">{user?.username}</span>
             <button
               onClick={handleLogout}
-              className="text-sm text-gray-500 hover:text-gray-900"
+              className="text-sm text-zinc-400 hover:text-white"
             >
               Sign out
             </button>

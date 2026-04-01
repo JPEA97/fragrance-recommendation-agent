@@ -49,15 +49,15 @@ function AddModal({ fragrance, onClose, onAdded }: AddModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl w-full max-w-sm p-6">
         <div className="mb-4">
-          <h2 className="font-semibold text-gray-900">{fragrance.name}</h2>
-          <p className="text-sm text-gray-500">{fragrance.brand}</p>
+          <h2 className="font-semibold text-white">{fragrance.name}</h2>
+          <p className="text-sm text-zinc-400">{fragrance.brand}</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">Ownership type</p>
+            <p className="text-sm font-medium text-zinc-300 mb-2">Ownership type</p>
             <div className="flex gap-2 flex-wrap">
               {ownershipOptions.map((opt) => (
                 <button
@@ -67,7 +67,7 @@ function AddModal({ fragrance, onClose, onAdded }: AddModalProps) {
                   className={`px-3 py-1.5 rounded-md text-sm font-medium border transition-colors ${
                     ownershipType === opt.value
                       ? 'bg-indigo-600 text-white border-indigo-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700'
                   }`}
                 >
                   {opt.label}
@@ -76,8 +76,8 @@ function AddModal({ fragrance, onClose, onAdded }: AddModalProps) {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Rating <span className="text-gray-400 font-normal">(optional, 1–10)</span>
+            <label className="block text-sm font-medium text-zinc-300 mb-1">
+              Rating <span className="text-zinc-500 font-normal">(optional, 1–10)</span>
             </label>
             <div className="flex gap-1.5 flex-wrap">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -88,7 +88,7 @@ function AddModal({ fragrance, onClose, onAdded }: AddModalProps) {
                   className={`w-8 h-8 rounded text-xs font-medium border transition-colors ${
                     personalRating === String(n)
                       ? 'bg-indigo-600 text-white border-indigo-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700'
                   }`}
                 >
                   {n}
@@ -97,8 +97,8 @@ function AddModal({ fragrance, onClose, onAdded }: AddModalProps) {
             </div>
           </div>
           <div>
-            <label htmlFor="ml" className="block text-sm font-medium text-gray-700 mb-1">
-              ML remaining <span className="text-gray-400 font-normal">(optional)</span>
+            <label htmlFor="ml" className="block text-sm font-medium text-zinc-300 mb-1">
+              ML remaining <span className="text-zinc-500 font-normal">(optional)</span>
             </label>
             <input
               id="ml"
@@ -108,10 +108,10 @@ function AddModal({ fragrance, onClose, onAdded }: AddModalProps) {
               value={mlRemaining}
               onChange={(e) => setMlRemaining(e.target.value)}
               placeholder="e.g. 50"
-              className="w-28 px-3 py-1.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-28 px-3 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
           <div className="flex gap-2 pt-1">
             <button
               type="submit"
@@ -123,7 +123,7 @@ function AddModal({ fragrance, onClose, onAdded }: AddModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2.5 rounded-lg text-sm font-medium text-zinc-300 border border-zinc-700 hover:bg-zinc-800 transition-colors"
             >
               Cancel
             </button>
@@ -217,39 +217,39 @@ export default function AddFragrancePage() {
       )}
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Add Fragrance</h1>
+        <h1 className="text-2xl font-bold text-white mb-4">Add Fragrance</h1>
         <div className="flex gap-3">
           <input
             type="text"
             value={search}
             onChange={handleSearchChange}
             placeholder="Search by name…"
-            className="flex-1 px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="flex-1 px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-900 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <input
             type="text"
             value={brand}
             onChange={handleBrandChange}
             placeholder="Filter by brand…"
-            className="w-40 px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-40 px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-900 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
       </div>
 
       {loading && (
         <div className="flex justify-center py-12">
-          <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+        <div className="bg-red-950/50 border border-red-800 rounded-xl p-4 text-sm text-red-400">
           {error}
         </div>
       )}
 
       {!loading && !error && fragrances.length === 0 && (
-        <p className="text-center text-gray-500 py-12">No fragrances found.</p>
+        <p className="text-center text-zinc-400 py-12">No fragrances found.</p>
       )}
 
       {!loading && fragrances.length > 0 && (
@@ -259,11 +259,11 @@ export default function AddFragrancePage() {
               <button
                 key={f.id}
                 onClick={() => setSelected(f)}
-                className="text-left bg-white border border-gray-200 rounded-xl p-4 hover:border-indigo-300 hover:shadow-sm transition-all"
+                className="text-left bg-zinc-900 border border-zinc-800 rounded-xl p-4 hover:border-indigo-700 hover:shadow-sm transition-all"
               >
-                <p className="font-semibold text-gray-900 truncate">{f.name}</p>
-                <p className="text-sm text-gray-500 mt-0.5">{f.brand}</p>
-                <div className="mt-2 flex gap-2 text-xs text-gray-400">
+                <p className="font-semibold text-white truncate">{f.name}</p>
+                <p className="text-sm text-zinc-400 mt-0.5">{f.brand}</p>
+                <div className="mt-2 flex gap-2 text-xs text-zinc-500">
                   {f.release_year && <span>{f.release_year}</span>}
                   {f.gender_category && (
                     <span className="capitalize">{f.gender_category}</span>
@@ -273,7 +273,7 @@ export default function AddFragrancePage() {
             ))}
           </div>
 
-          <div className="flex items-center justify-between mt-6 text-sm text-gray-500">
+          <div className="flex items-center justify-between mt-6 text-sm text-zinc-400">
             <span>
               Showing {offset + 1}–{offset + fragrances.length}
             </span>
@@ -281,14 +281,14 @@ export default function AddFragrancePage() {
               <button
                 onClick={handlePrev}
                 disabled={offset === 0}
-                className="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+                className="px-3 py-1 rounded-md border border-zinc-700 text-zinc-300 disabled:opacity-40 hover:bg-zinc-800 transition-colors"
               >
                 Prev
               </button>
               <button
                 onClick={handleNext}
                 disabled={!hasNext}
-                className="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+                className="px-3 py-1 rounded-md border border-zinc-700 text-zinc-300 disabled:opacity-40 hover:bg-zinc-800 transition-colors"
               >
                 Next
               </button>

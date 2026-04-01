@@ -56,7 +56,7 @@ export default function CollectionPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">My Collection</h1>
+        <h1 className="text-2xl font-bold text-white">My Collection</h1>
         <Link
           to="/collection/add"
           className="px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
@@ -66,29 +66,29 @@ export default function CollectionPage() {
       </div>
 
       {/* Filter bar */}
-      <div className="bg-white border border-gray-200 rounded-xl mb-4 overflow-hidden">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl mb-4 overflow-hidden">
         <button
           onClick={() => setFiltersOpen((v) => !v)}
-          className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
         >
           <span>Filters</span>
-          <span className="text-gray-400">{filtersOpen ? '▲' : '▼'}</span>
+          <span className="text-zinc-500">{filtersOpen ? '▲' : '▼'}</span>
         </button>
         {filtersOpen && (
-          <div className="px-4 pb-4 border-t border-gray-100 space-y-4">
+          <div className="px-4 pb-4 border-t border-zinc-800 space-y-4">
             <div className="pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Brand</label>
+                <label className="block text-xs font-medium text-zinc-400 mb-1">Brand</label>
                 <input
                   type="text"
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
                   placeholder="Search brand…"
-                  className="w-full px-2.5 py-1.5 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-2.5 py-1.5 rounded-md border border-zinc-700 bg-zinc-800 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Type</label>
+                <label className="block text-xs font-medium text-zinc-400 mb-1">Type</label>
                 <div className="flex gap-1 flex-wrap">
                   {ownershipOptions.map((opt) => (
                     <button
@@ -98,7 +98,7 @@ export default function CollectionPage() {
                       className={`px-2 py-1 rounded text-xs font-medium border ${
                         ownershipType === opt.value
                           ? 'bg-indigo-600 text-white border-indigo-600'
-                          : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                          : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700'
                       }`}
                     >
                       {opt.label}
@@ -107,11 +107,11 @@ export default function CollectionPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Min Rating</label>
+                <label className="block text-xs font-medium text-zinc-400 mb-1">Min Rating</label>
                 <select
                   value={minRating}
                   onChange={(e) => setMinRating(e.target.value === '' ? '' : Number(e.target.value))}
-                  className="w-full px-2.5 py-1.5 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-2.5 py-1.5 rounded-md border border-zinc-700 bg-zinc-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Any</option>
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -131,7 +131,7 @@ export default function CollectionPage() {
               </button>
               <button
                 onClick={clearFilters}
-                className="px-3 py-1.5 rounded-md text-xs font-medium text-gray-600 border border-gray-300 hover:bg-gray-50 transition-colors"
+                className="px-3 py-1.5 rounded-md text-xs font-medium text-zinc-300 border border-zinc-700 hover:bg-zinc-800 transition-colors"
               >
                 Clear
               </button>
@@ -142,19 +142,19 @@ export default function CollectionPage() {
 
       {loading && (
         <div className="flex justify-center py-12">
-          <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+        <div className="bg-red-950/50 border border-red-800 rounded-xl p-4 text-sm text-red-400">
           {error}
         </div>
       )}
 
       {!loading && !error && items.length === 0 && (
         <div className="text-center py-16">
-          <p className="text-gray-500 mb-3">Your collection is empty.</p>
+          <p className="text-zinc-400 mb-3">Your collection is empty.</p>
           <Link
             to="/collection/add"
             className="inline-block px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
@@ -172,7 +172,7 @@ export default function CollectionPage() {
             ))}
           </div>
 
-          <div className="flex items-center justify-between mt-6 text-sm text-gray-500">
+          <div className="flex items-center justify-between mt-6 text-sm text-zinc-400">
             <span>
               Showing {offset + 1}–{offset + items.length}
             </span>
@@ -180,14 +180,14 @@ export default function CollectionPage() {
               <button
                 onClick={() => setOffset((o) => Math.max(0, o - LIMIT))}
                 disabled={!hasPrev}
-                className="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+                className="px-3 py-1 rounded-md border border-zinc-700 text-zinc-300 disabled:opacity-40 hover:bg-zinc-800 transition-colors"
               >
                 Prev
               </button>
               <button
                 onClick={() => setOffset((o) => o + LIMIT)}
                 disabled={!hasNext}
-                className="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-40 hover:bg-gray-50 transition-colors"
+                className="px-3 py-1 rounded-md border border-zinc-700 text-zinc-300 disabled:opacity-40 hover:bg-zinc-800 transition-colors"
               >
                 Next
               </button>

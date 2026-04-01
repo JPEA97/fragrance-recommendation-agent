@@ -24,11 +24,11 @@ export default function DashboardPage() {
   return (
     <div className="max-w-xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">What should I wear today?</h1>
-        <p className="text-sm text-gray-500 mt-1">Select your context and get a recommendation from your collection.</p>
+        <h1 className="text-2xl font-bold text-white">What should I wear today?</h1>
+        <p className="text-sm text-zinc-400 mt-1">Select your context and get a recommendation from your collection.</p>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mb-6">
         <ContextForm
           value={context}
           onChange={setContext}
@@ -38,15 +38,15 @@ export default function DashboardPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+        <div className="bg-red-950/50 border border-red-800 rounded-xl p-4 text-sm text-red-400">
           {error}
         </div>
       )}
 
       {emptyCollection && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 text-center">
-          <p className="text-sm font-medium text-amber-900 mb-1">Your collection is empty</p>
-          <p className="text-sm text-amber-700 mb-3">
+        <div className="bg-amber-950/50 border border-amber-800 rounded-xl p-5 text-center">
+          <p className="text-sm font-medium text-amber-300 mb-1">Your collection is empty</p>
+          <p className="text-sm text-amber-400 mb-3">
             Add fragrances to your collection to get personalized recommendations.
           </p>
           <Link

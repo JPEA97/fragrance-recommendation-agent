@@ -87,14 +87,14 @@ export default function CollectionItemPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-16">
-        <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   if (error || !item) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+      <div className="bg-red-950/50 border border-red-800 rounded-xl p-4 text-sm text-red-400">
         {error ?? 'Item not found.'}
       </div>
     )
@@ -104,20 +104,20 @@ export default function CollectionItemPage() {
     <div className="max-w-lg mx-auto">
       <button
         onClick={() => navigate('/collection')}
-        className="text-sm text-gray-500 hover:text-gray-900 mb-4 inline-block"
+        className="text-sm text-zinc-400 hover:text-white mb-4 inline-block"
       >
         ← My Collection
       </button>
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">{item.fragrance.name}</h1>
-        <p className="text-gray-500 mt-0.5">{item.fragrance.brand}</p>
+        <h1 className="text-2xl font-bold text-white">{item.fragrance.name}</h1>
+        <p className="text-zinc-400 mt-0.5">{item.fragrance.brand}</p>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-5">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-5">
         {/* Ownership type */}
         <div>
-          <p className="text-sm font-medium text-gray-700 mb-2">Ownership type</p>
+          <p className="text-sm font-medium text-zinc-300 mb-2">Ownership type</p>
           <div className="flex gap-2">
             {ownershipOptions.map((opt) => (
               <button
@@ -130,7 +130,7 @@ export default function CollectionItemPage() {
                 className={`px-3 py-1.5 rounded-md text-sm font-medium border transition-colors ${
                   ownershipType === opt.value
                     ? 'bg-indigo-600 text-white border-indigo-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700'
                 }`}
               >
                 {opt.label}
@@ -141,8 +141,8 @@ export default function CollectionItemPage() {
 
         {/* Personal rating */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Personal rating <span className="text-gray-400 font-normal">(1–10)</span>
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
+            Personal rating <span className="text-zinc-500 font-normal">(1–10)</span>
           </label>
           <div className="flex gap-1.5 flex-wrap">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -156,7 +156,7 @@ export default function CollectionItemPage() {
                 className={`w-9 h-9 rounded-md text-sm font-medium border transition-colors ${
                   personalRating === String(n)
                     ? 'bg-indigo-600 text-white border-indigo-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700'
                 }`}
               >
                 {n}
@@ -169,7 +169,7 @@ export default function CollectionItemPage() {
                 setPersonalRating('')
                 markDirty()
               }}
-              className="mt-1 text-xs text-gray-400 hover:text-gray-600"
+              className="mt-1 text-xs text-zinc-500 hover:text-zinc-300"
             >
               Clear rating
             </button>
@@ -178,7 +178,7 @@ export default function CollectionItemPage() {
 
         {/* Times worn */}
         <div>
-          <label htmlFor="timesWorn" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="timesWorn" className="block text-sm font-medium text-zinc-300 mb-1">
             Times worn
           </label>
           <input
@@ -190,14 +190,14 @@ export default function CollectionItemPage() {
               setTimesWorn(e.target.value)
               markDirty()
             }}
-            className="w-32 px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-32 px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
         {/* ML remaining */}
         <div>
-          <label htmlFor="mlRemaining" className="block text-sm font-medium text-gray-700 mb-1">
-            ML remaining <span className="text-gray-400 font-normal">(optional)</span>
+          <label htmlFor="mlRemaining" className="block text-sm font-medium text-zinc-300 mb-1">
+            ML remaining <span className="text-zinc-500 font-normal">(optional)</span>
           </label>
           <input
             id="mlRemaining"
@@ -209,12 +209,12 @@ export default function CollectionItemPage() {
               setMlRemaining(e.target.value)
               markDirty()
             }}
-            className="w-32 px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-32 px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder="e.g. 50"
           />
         </div>
 
-        {saveError && <p className="text-sm text-red-600">{saveError}</p>}
+        {saveError && <p className="text-sm text-red-400">{saveError}</p>}
 
         {dirty && (
           <button
@@ -232,13 +232,13 @@ export default function CollectionItemPage() {
         {!confirmDelete ? (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="text-sm text-red-500 hover:text-red-700"
+            className="text-sm text-red-500 hover:text-red-400"
           >
             Remove from collection
           </button>
         ) : (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-            <p className="text-sm text-red-700 mb-3">
+          <div className="bg-red-950/50 border border-red-800 rounded-xl p-4">
+            <p className="text-sm text-red-400 mb-3">
               Remove <strong>{item.fragrance.name}</strong> from your collection?
             </p>
             <div className="flex gap-2">
@@ -251,7 +251,7 @@ export default function CollectionItemPage() {
               </button>
               <button
                 onClick={() => setConfirmDelete(false)}
-                className="px-3 py-1.5 rounded-md text-sm font-medium text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
+                className="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-300 border border-zinc-700 hover:bg-zinc-800 transition-colors"
               >
                 Cancel
               </button>

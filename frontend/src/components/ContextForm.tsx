@@ -20,7 +20,7 @@ function ButtonGroup<T extends string>({
 }) {
   return (
     <div className="space-y-2">
-      <p className="text-sm font-medium text-gray-700">{label}</p>
+      <p className="text-sm font-medium text-zinc-300">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map((opt) => (
           <button
@@ -30,7 +30,7 @@ function ButtonGroup<T extends string>({
             className={`px-3 py-1.5 rounded-md text-sm font-medium border transition-colors ${
               value === opt.value
                 ? 'bg-indigo-600 text-white border-indigo-600'
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700'
             }`}
           >
             {opt.label}
