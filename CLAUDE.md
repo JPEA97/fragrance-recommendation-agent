@@ -10,12 +10,24 @@ Both the backend and frontend are fully implemented and working on `main`.
 
 ---
 
-## Current state (as of 2026-03-31)
+## Current state (as of 2026-04-01)
 
-- Backend: complete, all endpoints working, full integration + unit test coverage.
-- Frontend: complete, dark-themed React SPA. Recently merged from `frontend-foundation` branch.
-- Last significant change: dark theme applied across all pages, brand name changed to "S.O.T.D." (`feat: apply dark theme and rebrand to S.O.T.D.` — commit `5f6cc61`).
-- No open branches or pending work.
+- Backend: complete, all endpoints working, full integration + unit test coverage. No changes this session.
+- Frontend: complete. Significant UI overhaul this session — see changelog below.
+- Both `main` and `frontend-foundation` are in sync and pushed to origin.
+- Last commit: `feat: add About page accessible from landing and app navbar` (`063c23b`)
+
+### Frontend changelog (2026-04-01)
+
+- **Landing page** (`/`) — radial indigo glow hero with large typography + tabbed sign in / register section on scroll. "About" link top-right.
+- **Dashboard** — redesigned as a step-by-step context selector. One big question per screen, auto-advances on selection, breadcrumb trail, fade transitions between phases (steps → loading → results).
+- **Dashboard route** moved from `/` to `/dashboard`. Unauthenticated users redirect to `/` (not `/login`). Logout goes to `/`.
+- **About page** (`/about`) — public route, no login required. Accessible from landing page and navbar. Same visual style as landing page.
+- **Fragrance images** — static local files in `frontend/public/images/`. Mapped via `frontend/src/lib/fragranceImages.ts` using `"Brand::Name"` keys. 45+ images added. Images show in catalog tiles, collection cards, item detail, and recommendation results.
+- **Collection page** — 2-column grid, always-visible filters (no accordion), sticky header with stats bar.
+- **Catalog page** — product tile cards (image area at top, letter placeholder for missing images), sticky search bar, 3–4 column grid.
+- **Layout** — subtle ambient indigo glow on all inner pages, navbar has `backdrop-blur`.
+- **SVG favicon** — indigo perfume bottle at `frontend/public/favicon.svg`.
 
 ---
 
@@ -179,6 +191,9 @@ npm run preview  # preview production build
 
 ```
 frontend/
+├── public/
+│   ├── favicon.svg            # indigo perfume bottle SVG
+│   └── images/                # static fragrance bottle images (45+)
 └── src/
     ├── api/
     │   ├── client.ts          # base fetch wrapper — auth injection, envelope unwrapping, error normalization, 401 redirect
@@ -191,19 +206,23 @@ frontend/
     ├── hooks/
     │   ├── useCollection.ts   # fetch collection list with filter params
     │   └── useRecommendation.ts  # calls POST /recommendation/, handles 404 as empty-collection
+    ├── lib/
+    │   └── fragranceImages.ts # maps "Brand::Name" → /images/filename.png
     ├── pages/
-    │   ├── LoginPage.tsx           # email + password form, redirects to / on success
-    │   ├── RegisterPage.tsx        # email + username + password, auto-logs in after register
-    │   ├── DashboardPage.tsx       # recommendation-first home screen
-    │   ├── CollectionPage.tsx      # list view with collapsible filters and pagination
-    │   ├── CollectionItemPage.tsx  # detail view with inline edit and delete-with-confirm
-    │   └── AddFragrancePage.tsx    # catalog browse + debounced search → modal → add to collection
+    │   ├── LandingPage.tsx         # public hero + tabbed auth on scroll
+    │   ├── AboutPage.tsx           # public about page, same visual style as landing
+    │   ├── LoginPage.tsx           # standalone email + password form
+    │   ├── RegisterPage.tsx        # standalone register form, auto-logs in after register
+    │   ├── DashboardPage.tsx       # step-by-step context selector → recommendation results
+    │   ├── CollectionPage.tsx      # 2-col grid, sticky header, always-visible filters, stats bar
+    │   ├── CollectionItemPage.tsx  # detail view with inline edit, image header, delete-with-confirm
+    │   └── AddFragrancePage.tsx    # product tile catalog, sticky search, modal → add to collection
     ├── components/
-    │   ├── Layout.tsx              # top navbar with active links, username, sign out
+    │   ├── Layout.tsx              # navbar + ambient glow wrapper for all authenticated pages
     │   ├── ProtectedRoute.tsx      # auth guard with loading spinner, wraps Layout
-    │   ├── ContextForm.tsx         # 5-field toggle-button context selector (season/occasion/time/weather/location)
-    │   ├── RecommendationResult.tsx  # top pick card (prominent) + 2 alternatives (grid)
-    │   └── CollectionCard.tsx      # clickable card with ownership badge, rating, worn count, ml
+    │   ├── ContextForm.tsx         # 5-field toggle-button context selector (unused by dashboard, kept for reference)
+    │   ├── RecommendationResult.tsx  # top pick card + 2 alternatives, shows fragrance images
+    │   └── CollectionCard.tsx      # clickable grid card with image thumbnail, ownership badge, stats
     ├── types/
     │   └── api.ts             # all TS types matching backend contracts
     ├── router.tsx             # BrowserRouter + AuthProvider + route tree
@@ -214,14 +233,16 @@ frontend/
 
 | Page | Route | Auth required |
 |---|---|---|
+| Landing | `/` | No |
+| About | `/about` | No |
 | Login | `/login` | No |
 | Register | `/register` | No |
-| Dashboard | `/` | Yes |
+| Dashboard | `/dashboard` | Yes |
 | My Collection | `/collection` | Yes |
 | Collection Item | `/collection/:id` | Yes |
 | Add Fragrance | `/collection/add` | Yes |
 
-All routes under `/` require a valid token. Unauthenticated users are redirected to `/login`. Protected routes are wrapped in `Layout` which renders the top navbar.
+Unauthenticated users hitting protected routes redirect to `/` (landing). Authenticated users visiting `/` redirect to `/dashboard`. Logout navigates to `/`. Protected routes are wrapped in `Layout` which renders the top navbar.
 
 ### Design token reference
 
@@ -287,10 +308,29 @@ If caching or background refetch becomes painful, TanStack Query is the agreed u
 
 ### Critical user flows
 
-**New user:** Register → auto-login → empty collection CTA → Add Fragrance → collection populated → Dashboard → Get Recommendation
+**New user:** Landing (`/`) → scroll to auth → Register → auto-login → `/dashboard` → empty collection CTA → Add Fragrance → collection populated → Dashboard → Get Recommendation
 
-**Daily use:** Login → Dashboard → fill context form (all 5 fields required) → top 3 results displayed
+**Daily use:** Login → `/dashboard` → step-by-step context (season → occasion → time → weather → location, auto-advances) → loading phase → top 3 results. "Start over" resets the flow.
 
-**Collection maintenance:** Collection list → item detail → update rating / times_worn / ml → Save changes button appears when dirty → save → improved future recommendations
+**Collection maintenance:** Collection list → item card → detail page → update rating / times_worn / ml → Save changes button appears when dirty → save → improved future recommendations
 
-**Add fragrance:** Add Fragrance → browse/search catalog (debounced 300ms) → select → modal (ownership type + optional rating + optional ml) → saved → redirects to /collection
+**Add fragrance:** Add Fragrance → sticky search / brand filter → product tile catalog → select → modal (ownership type + optional rating + optional ml) → saved → redirects to `/collection`
+
+### Fragrance images
+
+Images are static local files in `frontend/public/images/`. The mapping lives in `frontend/src/lib/fragranceImages.ts`:
+
+```ts
+// Maps "Brand::Fragrance Name" → "/images/filename.png"
+const images: Record<string, string> = {
+  'Hugo Boss::Boss Reversed': '/images/boss-reversed.png',
+  // ...
+}
+```
+
+**When adding new images:**
+1. Drop the file in `frontend/public/images/`
+2. Check the exact brand and name in `backend/scripts/data/catalog.json` (watch for accents: `Lancôme`, `Adolfo Domínguez`, `Acqua di Giò Profondo`, etc.)
+3. Add one line to `fragranceImages.ts`
+
+Images render in: catalog tiles, collection cards, collection item detail header, recommendation result cards.
