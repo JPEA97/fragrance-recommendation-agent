@@ -10,17 +10,22 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.')
+      return
+    }
     setLoading(true)
     try {
       await register({ email, username, password })
       await login(email, password)
-      navigate('/dashboard')
+      navigate('/getting-started')
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)
@@ -81,6 +86,24 @@ export default function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-800 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
+            </div>
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-300 mb-1">
+                Confirm password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-800 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+              {confirmPassword && (
+                <p className={`text-xs mt-1 ${password === confirmPassword ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {password === confirmPassword ? 'Passwords match' : 'Passwords do not match'}
+                </p>
+              )}
             </div>
             {error && <p className="text-sm text-red-400">{error}</p>}
             <button

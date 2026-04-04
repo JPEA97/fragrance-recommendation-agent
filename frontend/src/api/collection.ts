@@ -12,6 +12,7 @@ export interface CollectionParams {
   limit?: number
   offset?: number
   brand?: string
+  query?: string
   ownership_type?: OwnershipType
   min_rating?: number
 }

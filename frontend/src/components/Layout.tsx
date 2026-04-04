@@ -21,17 +21,18 @@ export default function Layout({ children }: { children: ReactNode }) {
       <nav className="relative bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <span className="font-semibold text-white tracking-tight">S.O.T.D.</span>
+            <img src="/favicon.svg" alt="S.O.T.D." className="w-6 h-6 shrink-0" />
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
                 `text-sm font-medium ${isActive ? 'text-indigo-400' : 'text-zinc-400 hover:text-white'}`
               }
             >
-              Dashboard
+              S.O.T.D.
             </NavLink>
             <NavLink
               to="/collection"
+              end
               className={({ isActive }) =>
                 `text-sm font-medium ${isActive ? 'text-indigo-400' : 'text-zinc-400 hover:text-white'}`
               }

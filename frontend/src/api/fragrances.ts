@@ -6,6 +6,7 @@ export interface FragranceParams {
   offset?: number
   brand?: string
   search?: string
+  query?: string
 }
 
 export async function getFragrances(

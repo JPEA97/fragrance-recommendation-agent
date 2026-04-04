@@ -1,7 +1,7 @@
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from app.db.deps import get_db
@@ -27,24 +27,34 @@ def list_fragrances(
     offset: int = Query(default=0, ge=0),
     brand: Optional[str] = None,
     search: Optional[str] = None,
+    query: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
-    query = db.query(Fragrance, Brand).join(Brand, Fragrance.brand_id == Brand.id)
+    db_query = db.query(Fragrance, Brand).join(Brand, Fragrance.brand_id == Brand.id)
 
-    if brand:
-        normalized_brand = brand.strip().replace("'", "").replace(" ", "")
-        query = query.filter(
-            normalize_text_expr(Brand.name).ilike(f"%{normalized_brand}%")
+    if query:
+        normalized = query.strip().replace("'", "").replace(" ", "")
+        db_query = db_query.filter(
+            or_(
+                normalize_text_expr(Fragrance.name).ilike(f"%{normalized}%"),
+                normalize_text_expr(Brand.name).ilike(f"%{normalized}%"),
+            )
         )
+    else:
+        if brand:
+            normalized_brand = brand.strip().replace("'", "").replace(" ", "")
+            db_query = db_query.filter(
+                normalize_text_expr(Brand.name).ilike(f"%{normalized_brand}%")
+            )
 
-    if search:
-        normalized_search = search.strip().replace("'", "").replace(" ", "")
-        query = query.filter(
-            normalize_text_expr(Fragrance.name).ilike(f"%{normalized_search}%")
-        )
+        if search:
+            normalized_search = search.strip().replace("'", "").replace(" ", "")
+            db_query = db_query.filter(
+                normalize_text_expr(Fragrance.name).ilike(f"%{normalized_search}%")
+            )
 
     rows = (
-        query.order_by(Brand.name.asc(), Fragrance.name.asc())
+        db_query.order_by(Brand.name.asc(), Fragrance.name.asc())
         .offset(offset)
         .limit(limit)
         .all()

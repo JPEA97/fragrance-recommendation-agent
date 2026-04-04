@@ -16,7 +16,7 @@ const ownershipOptions: { value: OwnershipType | ''; label: string }[] = [
 export default function CollectionPage() {
   const { items, meta, loading, error, load } = useCollection()
   const [offset, setOffset] = useState(0)
-  const [brand, setBrand] = useState('')
+  const [search, setSearch] = useState('')
   const [ownershipType, setOwnershipType] = useState<OwnershipType | ''>('')
   const [minRating, setMinRating] = useState<number | ''>('')
 
@@ -24,7 +24,7 @@ export default function CollectionPage() {
     return {
       limit: LIMIT,
       offset,
-      ...(brand ? { brand } : {}),
+      ...(search ? { query: search } : {}),
       ...(ownershipType ? { ownership_type: ownershipType } : {}),
       ...(minRating !== '' ? { min_rating: minRating } : {}),
     }
@@ -41,7 +41,7 @@ export default function CollectionPage() {
   }
 
   function clearFilters() {
-    setBrand('')
+    setSearch('')
     setOwnershipType('')
     setMinRating('')
     setOffset(0)
@@ -99,10 +99,10 @@ export default function CollectionPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <input
               type="text"
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-              placeholder="Search brand…"
+              placeholder="Search by name or brand…"
               className="px-3 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <div className="flex gap-1">

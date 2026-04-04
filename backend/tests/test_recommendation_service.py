@@ -13,11 +13,13 @@ def make_row(
     tags: list[tuple[str, str]],
     personal_rating: int | None = None,
     times_worn: int = 0,
+    last_worn_at=None,
 ):
     item = SimpleNamespace(
         id=item_id,
         personal_rating=personal_rating,
         times_worn=times_worn,
+        last_worn_at=last_worn_at,
     )
     fragrance = SimpleNamespace(
         id=fragrance_id,

@@ -152,19 +152,17 @@ export default function AddFragrancePage() {
   const [offset, setOffset] = useState(0)
   const [hasNext, setHasNext] = useState(false)
   const [search, setSearch] = useState('')
-  const [brand, setBrand] = useState('')
   const [selected, setSelected] = useState<FragranceListItem | null>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  async function loadFragrances(params: { offset: number; search: string; brand: string }) {
+  async function loadFragrances(params: { offset: number; search: string }) {
     setLoading(true)
     setError(null)
     try {
       const { items, meta } = await getFragrances({
         limit: LIMIT,
         offset: params.offset,
-        search: params.search || undefined,
-        brand: params.brand || undefined,
+        query: params.search || undefined,
       })
       setFragrances(items)
       setHasNext(meta.count === LIMIT)
@@ -176,40 +174,30 @@ export default function AddFragrancePage() {
   }
 
   useEffect(() => {
-    loadFragrances({ offset: 0, search, brand })
+    loadFragrances({ offset: 0, search })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  function triggerSearch(newSearch: string, newBrand: string) {
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(() => {
-      setOffset(0)
-      loadFragrances({ offset: 0, search: newSearch, brand: newBrand })
-    }, 300)
-  }
 
   function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
     const v = e.target.value
     setSearch(v)
-    triggerSearch(v, brand)
-  }
-
-  function handleBrandChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const v = e.target.value
-    setBrand(v)
-    triggerSearch(search, v)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      setOffset(0)
+      loadFragrances({ offset: 0, search: v })
+    }, 300)
   }
 
   function handlePrev() {
     const next = Math.max(0, offset - LIMIT)
     setOffset(next)
-    loadFragrances({ offset: next, search, brand })
+    loadFragrances({ offset: next, search })
   }
 
   function handleNext() {
     const next = offset + LIMIT
     setOffset(next)
-    loadFragrances({ offset: next, search, brand })
+    loadFragrances({ offset: next, search })
   }
 
   function handleAdded() {
@@ -228,22 +216,13 @@ export default function AddFragrancePage() {
 
       <div className="sticky top-0 z-10 bg-zinc-950 pb-4 -mx-4 px-4 pt-1">
         <h1 className="text-2xl font-bold text-white mb-4">Add Fragrance</h1>
-        <div className="flex gap-3">
-          <input
-            type="text"
-            value={search}
-            onChange={handleSearchChange}
-            placeholder="Search by name…"
-            className="flex-1 px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-900 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          <input
-            type="text"
-            value={brand}
-            onChange={handleBrandChange}
-            placeholder="Filter by brand…"
-            className="w-40 px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-900 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+        <input
+          type="text"
+          value={search}
+          onChange={handleSearchChange}
+          placeholder="Search by name or brand…"
+          className="w-full px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-900 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
       </div>
 
       {loading && (

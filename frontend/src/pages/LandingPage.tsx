@@ -22,6 +22,7 @@ export default function LandingPage() {
   const [regEmail, setRegEmail] = useState('')
   const [regUsername, setRegUsername] = useState('')
   const [regPassword, setRegPassword] = useState('')
+  const [regConfirmPassword, setRegConfirmPassword] = useState('')
   const [regError, setRegError] = useState<string | null>(null)
   const [regLoading, setRegLoading] = useState(false)
 
@@ -47,11 +48,15 @@ export default function LandingPage() {
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     setRegError(null)
+    if (regPassword !== regConfirmPassword) {
+      setRegError('Passwords do not match.')
+      return
+    }
     setRegLoading(true)
     try {
       await register({ email: regEmail, username: regUsername, password: regPassword })
       await login(regEmail, regPassword)
-      navigate('/dashboard')
+      navigate('/getting-started')
     } catch (err) {
       setRegError(err instanceof ApiError ? err.message : 'Something went wrong.')
     } finally {
@@ -240,6 +245,22 @@ export default function LandingPage() {
                     onChange={(e) => setRegPassword(e.target.value)}
                     className={inputClass}
                   />
+                </div>
+                <div>
+                  <label htmlFor="reg-confirm-password" className={labelClass}>Confirm password</label>
+                  <input
+                    id="reg-confirm-password"
+                    type="password"
+                    required
+                    value={regConfirmPassword}
+                    onChange={(e) => setRegConfirmPassword(e.target.value)}
+                    className={inputClass}
+                  />
+                  {regConfirmPassword && (
+                    <p className={`text-xs mt-1 ${regPassword === regConfirmPassword ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {regPassword === regConfirmPassword ? 'Passwords match' : 'Passwords do not match'}
+                    </p>
+                  )}
                 </div>
                 {regError && <p className="text-sm text-red-400">{regError}</p>}
                 <button

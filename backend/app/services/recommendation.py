@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+from datetime import datetime, timezone
 
 from app.models.brand import Brand
 from app.models.collection_item import CollectionItem
@@ -31,7 +32,6 @@ def build_recommendations(rows: Iterable, payload: RecommendationRequest) -> lis
         tags = data["tags"]
 
         score = 0
-        penalty = min(item.times_worn, 5)
         matched_context = []
 
         if ("occasion", payload.occasion) in tags:
@@ -50,8 +50,32 @@ def build_recommendations(rows: Iterable, payload: RecommendationRequest) -> lis
             score += 3
             matched_context.append(f"{payload.location_type} setting")
 
-        rating_bonus = min(item.personal_rating or 0, 3)
+        # Rating bonus: scaled 0–6 across the 1–10 range
+        rating = item.personal_rating or 0
+        if rating >= 9:
+            rating_bonus = 6
+        elif rating >= 7:
+            rating_bonus = 4
+        elif rating >= 5:
+            rating_bonus = 2
+        else:
+            rating_bonus = 0
         score += rating_bonus
+
+        # Recency penalty: decays over 7 days based on last_worn_at
+        penalty = 0
+        if item.last_worn_at is not None:
+            now = datetime.now(timezone.utc)
+            last_worn = item.last_worn_at
+            if last_worn.tzinfo is None:
+                last_worn = last_worn.replace(tzinfo=timezone.utc)
+            days_ago = (now - last_worn).days
+            if days_ago <= 1:
+                penalty = 5
+            elif days_ago <= 3:
+                penalty = 3
+            elif days_ago <= 7:
+                penalty = 1
         score -= penalty
 
         reason_parts = []
@@ -59,8 +83,8 @@ def build_recommendations(rows: Iterable, payload: RecommendationRequest) -> lis
             reason_parts.append("Matches " + ", ".join(matched_context[:3]))
         if item.personal_rating and item.personal_rating >= 8:
             reason_parts.append("highly rated by you")
-        if item.times_worn <= 1:
-            reason_parts.append("not overused recently")
+        if item.last_worn_at is None:
+            reason_parts.append("not yet worn")
 
         reason = (
             ". ".join(reason_parts)

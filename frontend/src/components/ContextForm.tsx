@@ -58,7 +58,7 @@ const occasions: { value: Occasion; label: string }[] = [
 ]
 
 const timesOfDay: { value: TimeOfDay; label: string }[] = [
-  { value: 'early_morning', label: 'Early Morning' },
+  { value: 'morning', label: 'Morning' },
   { value: 'day', label: 'Day' },
   { value: 'evening', label: 'Evening' },
   { value: 'night', label: 'Night' },

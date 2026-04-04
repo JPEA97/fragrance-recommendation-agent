@@ -43,6 +43,20 @@ def seed_catalog(db: Session) -> None:
             db.flush()
         tag_map[(tag.type, tag.name)] = tag
 
+    # Remove contextual tags no longer present in the catalog
+    # (e.g. renamed tags like early_morning → morning)
+    catalog_tag_pairs = {(t["type"], t["name"]) for t in catalog["tags"]}
+    contextual_types = {"season", "occasion", "time_of_day", "weather", "location_type"}
+    stale_tags = (
+        db.query(Tag)
+        .filter(Tag.type.in_(contextual_types))
+        .all()
+    )
+    for tag in stale_tags:
+        if (tag.type, tag.name) not in catalog_tag_pairs:
+            db.delete(tag)
+    db.flush()
+
     for fragrance_data in catalog["fragrances"]:
         brand = brand_map[fragrance_data["brand"]]
 

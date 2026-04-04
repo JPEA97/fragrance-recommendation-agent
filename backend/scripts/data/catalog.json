@@ -50,7 +50,13 @@
   { "name": "Clinique" },
   { "name": "Paris Hilton" },
   { "name": "El Ganso" },
-  { "name": "Louis Vuitton" }
+  { "name": "Louis Vuitton" },
+  { "name": "Guy Laroche" },
+  { "name": "Pierre Cardin" },
+  { "name": "Loewe" },
+  { "name": "Le Labo" },
+  { "name": "Montale" },
+  { "name": "Nina Ricci" }
   
 
 ],
@@ -66,8 +72,11 @@
   { "type": "occasion", "name": "wedding" },
   { "type": "occasion", "name": "formal" },
   { "type": "occasion", "name": "party" },
+  { "type": "occasion", "name": "sport" },
+  { "type": "occasion", "name": "beach" },
+  { "type": "occasion", "name": "travel" },
 
-  { "type": "time_of_day", "name": "early_morning" },
+  { "type": "time_of_day", "name": "morning" },
   { "type": "time_of_day", "name": "day" },
   { "type": "time_of_day", "name": "evening" },
   { "type": "time_of_day", "name": "night" },
@@ -218,7 +227,9 @@
   { "type": "note", "name": "cocoa" },
   { "type": "note", "name": "caramel" },
   { "type": "note", "name": "narcissus" },
-  { "type": "note", "name": "birch" }
+  { "type": "note", "name": "birch" },
+  { "type": "note", "name": "apricot" },
+  { "type": "note", "name": "carnation" }
 
 
 
@@ -268,7 +279,8 @@
       ["location_type", "outdoor"],
       ["accord", "woody"],
       ["accord", "fresh"],
-      ["note", "bergamot"]
+      ["note", "bergamot"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -382,7 +394,8 @@
       ["note", "lemon"],
       ["note", "apple"],
       ["note", "jasmine"],
-      ["note", "cedar"]
+      ["note", "cedar"],
+      ["occasion", "beach"]
     ]
   },
   {
@@ -407,7 +420,9 @@
       ["accord", "aromatic"],
       ["note", "grapefruit"],
       ["note", "bergamot"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "sport"],
+      ["occasion", "beach"]
     ]
   },
   {
@@ -480,7 +495,8 @@
       ["accord", "aromatic"],
       ["note", "bergamot"],
       ["note", "grapefruit"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -823,7 +839,8 @@
       ["accord", "aromatic"],
       ["accord", "fresh"],
       ["note", "lavender"],
-      ["note", "bergamot"]
+      ["note", "bergamot"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -1041,7 +1058,7 @@
       ["occasion", "casual"],
       ["occasion", "office"],
       ["time_of_day", "day"],
-      ["time_of_day", "early_morning"],
+      ["time_of_day", "morning"],
       ["weather", "hot"],
       ["weather", "mild"],
       ["location_type", "outdoor"],
@@ -1051,7 +1068,8 @@
       ["accord", "woody"],
       ["note", "bergamot"],
       ["note", "ginger"],
-      ["note", "cedar"]
+      ["note", "cedar"],
+      ["occasion", "sport"]
     ]
   },
   {
@@ -1346,7 +1364,8 @@
       ["accord", "woody"],
       ["note", "iris"],
       ["note", "cedar"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -1458,7 +1477,9 @@
       ["accord", "woody"],
       ["note", "bergamot"],
       ["note", "sea_salt"],
-      ["note", "cedar"]
+      ["note", "cedar"],
+      ["occasion", "sport"],
+      ["occasion", "beach"]
     ]
   },
   {
@@ -1483,7 +1504,10 @@
       ["accord", "citrus"],
       ["note", "bergamot"],
       ["note", "jasmine"],
-      ["note", "cedar"]
+      ["note", "cedar"],
+      ["occasion", "sport"],
+      ["occasion", "beach"],
+      ["time_of_day", "morning"]
     ]
   },
   {
@@ -1510,7 +1534,8 @@
       ["accord", "aromatic"],
       ["note", "bergamot"],
       ["note", "incense"],
-      ["note", "patchouli"]
+      ["note", "patchouli"],
+      ["occasion", "beach"]
     ]
   },
   {
@@ -1755,7 +1780,9 @@
       ["accord", "floral"],
       ["note", "neroli"],
       ["note", "bergamot"],
-      ["note", "lemon"]
+      ["note", "lemon"],
+      ["occasion", "beach"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -1779,7 +1806,8 @@
       ["accord", "sweet"],
       ["note", "orange_blossom"],
       ["note", "jasmine"],
-      ["note", "vanilla"]
+      ["note", "vanilla"],
+      ["occasion", "beach"]
     ]
   },
   {
@@ -1844,7 +1872,7 @@
       ["occasion", "casual"],
       ["occasion", "office"],
       ["time_of_day", "day"],
-      ["time_of_day", "early_morning"],
+      ["time_of_day", "morning"],
       ["weather", "mild"],
       ["weather", "hot"],
       ["location_type", "outdoor"],
@@ -1854,7 +1882,8 @@
       ["accord", "aromatic"],
       ["note", "bergamot"],
       ["note", "lavender"],
-      ["note", "vetiver"]
+      ["note", "vetiver"],
+      ["occasion", "sport"]
     ]
   },
   {
@@ -1869,7 +1898,7 @@
       ["occasion", "casual"],
       ["occasion", "office"],
       ["time_of_day", "day"],
-      ["time_of_day", "early_morning"],
+      ["time_of_day", "morning"],
       ["weather", "mild"],
       ["weather", "hot"],
       ["location_type", "outdoor"],
@@ -1879,7 +1908,9 @@
       ["accord", "green"],
       ["note", "bergamot"],
       ["note", "grapefruit"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "sport"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -1901,7 +1932,8 @@
       ["accord", "green"],
       ["note", "bergamot"],
       ["note", "lemon"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "beach"]
     ]
   },
   {
@@ -1926,7 +1958,8 @@
       ["accord", "musky"],
       ["note", "bergamot"],
       ["note", "sea_salt"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "beach"]
     ]
   },
   {
@@ -1967,7 +2000,7 @@
       ["occasion", "casual"],
       ["occasion", "office"],
       ["time_of_day", "day"],
-      ["time_of_day", "early_morning"],
+      ["time_of_day", "morning"],
       ["weather", "hot"],
       ["weather", "mild"],
       ["location_type", "outdoor"],
@@ -1977,7 +2010,8 @@
       ["accord", "aromatic"],
       ["note", "lemon"],
       ["note", "bergamot"],
-      ["note", "lavender"]
+      ["note", "lavender"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -2200,7 +2234,8 @@
       ["accord", "woody"],
       ["note", "jasmine"],
       ["note", "sandalwood"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -2373,7 +2408,8 @@
       ["accord", "aromatic"],
       ["note", "apple"],
       ["note", "bergamot"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "sport"]
     ]
   },
   {
@@ -2462,7 +2498,7 @@
       ["occasion", "casual"],
       ["occasion", "office"],
       ["time_of_day", "day"],
-      ["time_of_day", "early_morning"],
+      ["time_of_day", "morning"],
       ["weather", "hot"],
       ["weather", "mild"],
       ["location_type", "outdoor"],
@@ -2472,7 +2508,9 @@
       ["accord", "aromatic"],
       ["note", "bergamot"],
       ["note", "cardamom"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "sport"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -2865,7 +2903,8 @@
       ["note", "tarragon"],
       ["note", "sage"],
       ["note", "musk"],
-      ["note", "amber"]
+      ["note", "amber"],
+      ["occasion", "sport"]
     ]
   },
   {
@@ -3074,7 +3113,8 @@
       ["note", "cypress"],
       ["note", "mastic"],
       ["note", "patchouli"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "beach"]
     ]
   },
   {
@@ -3255,7 +3295,8 @@
       ["note", "cardamom"],
       ["note", "ambergris"],
       ["note", "musk"],
-      ["note", "driftwood"]
+      ["note", "driftwood"],
+      ["occasion", "beach"]
     ]
   },
   {
@@ -3490,7 +3531,9 @@
       ["note", "lotus"],
       ["note", "musk"],
       ["note", "cedar"],
-      ["note", "amber"]
+      ["note", "amber"],
+      ["occasion", "sport"],
+      ["occasion", "travel"]
     ]
   },
   {
@@ -3520,7 +3563,8 @@
       ["note", "mandarin_orange"],
       ["note", "green_notes"],
       ["note", "cedar"],
-      ["note", "musk"]
+      ["note", "musk"],
+      ["occasion", "sport"]
     ]
   },
   {
@@ -3583,7 +3627,10 @@
       ["note", "jasmine"],
       ["note", "musk"],
       ["note", "sandalwood"],
-      ["note", "cedar"]
+      ["note", "cedar"],
+      ["occasion", "sport"],
+      ["occasion", "beach"],
+      ["time_of_day", "morning"]
     ]
   },
   {
@@ -3877,6 +3924,7 @@
       ["season", "fall"],
       ["season", "winter"],
       ["occasion", "formal"],
+      ["occasion", "wedding"],
       ["occasion", "date"],
       ["occasion", "party"],
       ["time_of_day", "evening"],
@@ -4054,6 +4102,574 @@
       ["note", "patchouli"],
       ["note", "musk"],
       ["note", "oakmoss"]
+    ]
+  },
+  {
+    "brand": "Armaf",
+    "name": "Club de Nuit Intense Man",
+    "release_year": 2015,
+    "gender_category": "masculine",
+    "description": "Sharp, smoky, and fruity fragrance with bright citrus, dark woods, and a masculine musky base. Bold and attention-grabbing, it is best suited for cooler weather, evenings, and dressed-up casual wear.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "date"],
+      ["occasion", "formal"],
+      ["occasion", "casual"],
+      ["occasion", "office"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["time_of_day", "night"],
+      ["weather", "mild"],
+      ["weather", "cold"],
+      ["location_type", "indoor"],
+      ["location_type", "outdoor"],
+      ["accord", "fruity"],
+      ["accord", "smoky"],
+      ["accord", "woody"],
+      ["accord", "citrus"],
+      ["accord", "musky"],
+      ["accord", "fresh"],
+      ["note", "pineapple"],
+      ["note", "bergamot"],
+      ["note", "lemon"],
+      ["note", "black_currant"],
+      ["note", "birch"],
+      ["note", "jasmine"],
+      ["note", "patchouli"],
+      ["note", "musk"],
+      ["note", "amber"],
+      ["note", "vanilla"]
+    ]
+  },
+  {
+    "brand": "Armaf",
+    "name": "Odyssey Candee",
+    "release_year": 2024,
+    "gender_category": "feminine",
+    "description": "Playful, sweet, and youthful fragrance with fruity brightness, candy-like warmth, and a soft musky base. Fun and easy to wear, it works best for casual outings and cooler-to-mild weather.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "casual"],
+      ["occasion", "date"],
+      ["occasion", "party"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["weather", "mild"],
+      ["weather", "cold"],
+      ["location_type", "indoor"],
+      ["accord", "sweet"],
+      ["accord", "fruity"],
+      ["accord", "gourmand"],
+      ["accord", "musky"],
+      ["accord", "powdery"],
+      ["accord", "vanilla"],
+      ["note", "peach"],
+      ["note", "strawberry"],
+      ["note", "raspberry"],
+      ["note", "vanilla"],
+      ["note", "musk"],
+      ["note", "amber"]
+    ]
+  },
+  {
+    "brand": "Calvin Klein",
+    "name": "CK One",
+    "release_year": 1994,
+    "gender_category": "unisex",
+    "description": "Clean, crisp, and minimal citrus fragrance with airy green freshness and a light musky drydown. Casual and easygoing, it is ideal for warm weather and daytime wear.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "summer"],
+      ["occasion", "casual"],
+      ["occasion", "office"],
+      ["time_of_day", "day"],
+      ["weather", "hot"],
+      ["weather", "mild"],
+      ["location_type", "indoor"],
+      ["location_type", "outdoor"],
+      ["accord", "citrus"],
+      ["accord", "fresh"],
+      ["accord", "green"],
+      ["accord", "musky"],
+      ["accord", "aromatic"],
+      ["accord", "floral"],
+      ["note", "bergamot"],
+      ["note", "lemon"],
+      ["note", "pineapple"],
+      ["note", "green_notes"],
+      ["note", "jasmine"],
+      ["note", "violet"],
+      ["note", "musk"],
+      ["note", "amber"]
+    ]
+  },
+  {
+    "brand": "Guy Laroche",
+    "name": "Drakkar Noir",
+    "release_year": 1982,
+    "gender_category": "masculine",
+    "description": "Classic aromatic fougère with sharp herbal freshness, masculine woods, and a dark green character. Strong and assertive, it suits cooler weather and traditional masculine styling.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "office"],
+      ["occasion", "casual"],
+      ["occasion", "formal"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["weather", "mild"],
+      ["weather", "cold"],
+      ["location_type", "indoor"],
+      ["accord", "aromatic"],
+      ["accord", "green"],
+      ["accord", "woody"],
+      ["accord", "fresh"],
+      ["accord", "spicy"],
+      ["accord", "musky"],
+      ["note", "lavender"],
+      ["note", "bergamot"],
+      ["note", "lemon"],
+      ["note", "rosemary"],
+      ["note", "coriander"],
+      ["note", "patchouli"],
+      ["note", "vetiver"],
+      ["note", "cedar"],
+      ["note", "oakmoss"]
+    ]
+  },
+  {
+    "brand": "Parfums de Marly",
+    "name": "Percival",
+    "release_year": 2018,
+    "gender_category": "masculine",
+    "description": "Clean, fresh, and refined blue-style fragrance with citrus brightness, aromatic herbs, and a polished woody-musky base. Versatile and mass-appealing, it fits daily wear and office settings well.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "summer"],
+      ["season", "fall"],
+      ["occasion", "office"],
+      ["occasion", "casual"],
+      ["occasion", "date"],
+      ["occasion", "formal"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["weather", "hot"],
+      ["weather", "mild"],
+      ["location_type", "indoor"],
+      ["location_type", "outdoor"],
+      ["accord", "fresh"],
+      ["accord", "aromatic"],
+      ["accord", "citrus"],
+      ["accord", "musky"],
+      ["accord", "woody"],
+      ["accord", "fresh_spicy"],
+      ["note", "bergamot"],
+      ["note", "mandarin_orange"],
+      ["note", "lavender"],
+      ["note", "geranium"],
+      ["note", "cinnamon"],
+      ["note", "musk"],
+      ["note", "amberwood"]
+    ]
+  },
+  {
+    "brand": "Parfums de Marly",
+    "name": "Layton",
+    "release_year": 2016,
+    "gender_category": "masculine",
+    "description": "Rich, sweet, and elegant fragrance with spicy apple freshness and a warm vanilla-woody base. Luxurious and versatile, it excels in cooler weather and evening wear.",
+    "tags": [
+      ["season", "fall"],
+      ["season", "winter"],
+      ["season", "spring"],
+      ["occasion", "date"],
+      ["occasion", "formal"],
+      ["occasion", "party"],
+      ["occasion", "casual"],
+      ["time_of_day", "evening"],
+      ["time_of_day", "night"],
+      ["time_of_day", "day"],
+      ["weather", "cold"],
+      ["weather", "mild"],
+      ["location_type", "indoor"],
+      ["accord", "sweet"],
+      ["accord", "spicy"],
+      ["accord", "woody"],
+      ["accord", "vanilla"],
+      ["accord", "fruity"],
+      ["accord", "amber"],
+      ["note", "apple"],
+      ["note", "bergamot"],
+      ["note", "lavender"],
+      ["note", "cardamom"],
+      ["note", "vanilla"],
+      ["note", "sandalwood"],
+      ["note", "patchouli"],
+      ["note", "pepper"]
+    ]
+  },
+  {
+    "brand": "Parfums de Marly",
+    "name": "Greenley",
+    "release_year": 2020,
+    "gender_category": "masculine",
+    "description": "Bright, juicy, and energetic fragrance with crisp green apple, fresh citrus, and a smooth woody-musky base. Uplifting and highly wearable, it is best for daytime use and warm weather.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "summer"],
+      ["occasion", "casual"],
+      ["occasion", "office"],
+      ["occasion", "date"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["weather", "hot"],
+      ["weather", "mild"],
+      ["location_type", "indoor"],
+      ["location_type", "outdoor"],
+      ["accord", "fresh"],
+      ["accord", "green"],
+      ["accord", "fruity"],
+      ["accord", "citrus"],
+      ["accord", "woody"],
+      ["accord", "musky"],
+      ["note", "apple"],
+      ["note", "bergamot"],
+      ["note", "mandarin_orange"],
+      ["note", "cedar"],
+      ["note", "oakmoss"],
+      ["note", "musk"]
+    ]
+  },
+  {
+    "brand": "Pierre Cardin",
+    "name": "Choc",
+    "release_year": 1981,
+    "gender_category": "feminine",
+    "description": "Warm, sweet, and vintage-style fragrance with powdery florals, amber warmth, and a rich feminine character. Best suited for cooler weather and more classic dressy wear.",
+    "tags": [
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "formal"],
+      ["occasion", "date"],
+      ["occasion", "casual"],
+      ["time_of_day", "evening"],
+      ["time_of_day", "night"],
+      ["weather", "cold"],
+      ["weather", "mild"],
+      ["location_type", "indoor"],
+      ["accord", "powdery"],
+      ["accord", "sweet"],
+      ["accord", "amber"],
+      ["accord", "floral"],
+      ["accord", "oriental"],
+      ["accord", "vanilla"],
+      ["note", "rose"],
+      ["note", "jasmine"],
+      ["note", "vanilla"],
+      ["note", "amber"],
+      ["note", "musk"],
+      ["note", "sandalwood"]
+    ]
+  },
+  {
+    "brand": "Loewe",
+    "name": "Aire",
+    "release_year": 1985,
+    "gender_category": "feminine",
+    "description": "Fresh, airy, and elegant fragrance with green citrus brightness, soft florals, and a clean musky finish. Light and graceful, it is well suited for daytime wear and spring weather.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "summer"],
+      ["occasion", "casual"],
+      ["occasion", "office"],
+      ["occasion", "formal"],
+      ["time_of_day", "day"],
+      ["weather", "hot"],
+      ["weather", "mild"],
+      ["location_type", "indoor"],
+      ["location_type", "outdoor"],
+      ["accord", "fresh"],
+      ["accord", "green"],
+      ["accord", "citrus"],
+      ["accord", "floral"],
+      ["accord", "musky"],
+      ["accord", "aromatic"],
+      ["note", "bergamot"],
+      ["note", "lemon"],
+      ["note", "jasmine"],
+      ["note", "rose"],
+      ["note", "musk"],
+      ["note", "cedar"]
+    ]
+  },
+  {
+    "brand": "Le Labo",
+    "name": "Santal 33",
+    "release_year": 2011,
+    "gender_category": "unisex",
+    "description": "Dry, woody, and distinctive fragrance with creamy sandalwood, leather accents, and a smooth musky-spicy base. Stylish and recognizable, it works best in mild to cool weather and urban settings.",
+    "tags": [
+      ["season", "fall"],
+      ["season", "winter"],
+      ["season", "spring"],
+      ["occasion", "casual"],
+      ["occasion", "formal"],
+      ["occasion", "date"],
+      ["occasion", "office"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["time_of_day", "night"],
+      ["weather", "mild"],
+      ["weather", "cold"],
+      ["location_type", "indoor"],
+      ["accord", "woody"],
+      ["accord", "leather"],
+      ["accord", "smoky"],
+      ["accord", "spicy"],
+      ["accord", "musky"],
+      ["accord", "green"],
+      ["note", "cardamom"],
+      ["note", "violet"],
+      ["note", "iris"],
+      ["note", "sandalwood"],
+      ["note", "cedar"],
+      ["note", "leather"],
+      ["note", "musk"]
+    ]
+  },
+  {
+    "brand": "Montale",
+    "name": "Pure Gold",
+    "release_year": 2009,
+    "gender_category": "feminine",
+    "description": "Bright, elegant, and radiant fragrance with apricot sweetness, white florals, and a smooth musky-vanilla base. Feminine and polished, it performs well in daytime and dressed-up settings.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "summer"],
+      ["season", "fall"],
+      ["occasion", "formal"],
+      ["occasion", "date"],
+      ["occasion", "casual"],
+      ["occasion", "wedding"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["weather", "mild"],
+      ["weather", "hot"],
+      ["location_type", "indoor"],
+      ["accord", "floral"],
+      ["accord", "fruity"],
+      ["accord", "musky"],
+      ["accord", "sweet"],
+      ["accord", "powdery"],
+      ["accord", "vanilla"],
+      ["note", "apricot"],
+      ["note", "mandarin_orange"],
+      ["note", "jasmine"],
+      ["note", "orange_blossom"],
+      ["note", "musk"],
+      ["note", "vanilla"]
+    ]
+  },
+  {
+    "brand": "Nina Ricci",
+    "name": "L'Air du Temps",
+    "release_year": 1948,
+    "gender_category": "feminine",
+    "description": "Classic elegant floral with soft spice, powdery warmth, and a graceful vintage character. Timeless and refined, it is best suited for formal wear and cooler-to-mild weather.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "formal"],
+      ["occasion", "wedding"],
+      ["occasion", "date"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["weather", "mild"],
+      ["weather", "cold"],
+      ["location_type", "indoor"],
+      ["accord", "floral"],
+      ["accord", "powdery"],
+      ["accord", "spicy"],
+      ["accord", "sweet"],
+      ["accord", "woody"],
+      ["accord", "musky"],
+      ["note", "rose"],
+      ["note", "jasmine"],
+      ["note", "carnation"],
+      ["note", "iris"],
+      ["note", "sandalwood"],
+      ["note", "musk"]
+    ]
+  },
+  {
+    "brand": "Yves Saint Laurent",
+    "name": "Paris",
+    "release_year": 1983,
+    "gender_category": "feminine",
+    "description": "Romantic and classic floral fragrance centered on rose and violet with a soft powdery warmth. Feminine and elegant, it is especially suited for formal wear and cooler seasons.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "formal"],
+      ["occasion", "wedding"],
+      ["occasion", "date"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["weather", "mild"],
+      ["weather", "cold"],
+      ["location_type", "indoor"],
+      ["accord", "floral"],
+      ["accord", "rose"],
+      ["accord", "powdery"],
+      ["accord", "sweet"],
+      ["accord", "woody"],
+      ["accord", "musky"],
+      ["note", "rose"],
+      ["note", "violet"],
+      ["note", "bergamot"],
+      ["note", "iris"],
+      ["note", "sandalwood"],
+      ["note", "musk"]
+    ]
+  },
+  {
+    "brand": "Zara",
+    "name": "Vibrant Caramel",
+    "release_year": 2024,
+    "gender_category": "feminine",
+    "description": "Sweet, cozy, and playful fragrance with caramel warmth, soft woods, and a creamy gourmand feel. Easy to wear and comforting, it works best in cooler weather and casual settings.",
+    "tags": [
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "casual"],
+      ["occasion", "date"],
+      ["occasion", "party"],
+      ["time_of_day", "evening"],
+      ["time_of_day", "night"],
+      ["weather", "cold"],
+      ["weather", "mild"],
+      ["location_type", "indoor"],
+      ["accord", "sweet"],
+      ["accord", "gourmand"],
+      ["accord", "vanilla"],
+      ["accord", "amber"],
+      ["accord", "powdery"],
+      ["accord", "woody"],
+      ["note", "caramel"],
+      ["note", "vanilla"],
+      ["note", "amber"],
+      ["note", "musk"],
+      ["note", "wood"]
+    ]
+  },
+  {
+    "brand": "Chanel",
+    "name": "Coco Mademoiselle",
+    "release_year": 2001,
+    "gender_category": "feminine",
+    "description": "Elegant and modern fragrance with sparkling citrus, soft florals, and a clean patchouli-amber base. Sophisticated and versatile, it works well across office, formal, and evening wear.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "office"],
+      ["occasion", "formal"],
+      ["occasion", "date"],
+      ["occasion", "wedding"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["weather", "mild"],
+      ["weather", "cold"],
+      ["location_type", "indoor"],
+      ["accord", "citrus"],
+      ["accord", "floral"],
+      ["accord", "sweet"],
+      ["accord", "amber"],
+      ["accord", "fresh"],
+      ["note", "orange"],
+      ["note", "bergamot"],
+      ["note", "rose"],
+      ["note", "jasmine"],
+      ["note", "patchouli"],
+      ["note", "vanilla"],
+      ["note", "musk"]
+    ]
+  },
+  {
+    "brand": "Chanel",
+    "name": "Coco Eau de Parfum",
+    "release_year": 1984,
+    "gender_category": "feminine",
+    "description": "Rich, warm, and opulent fragrance with ambered florals, spice, and a deep oriental character. Elegant and dramatic, it is best suited for cooler weather and evening wear.",
+    "tags": [
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "formal"],
+      ["occasion", "date"],
+      ["occasion", "party"],
+      ["occasion", "wedding"],
+      ["time_of_day", "evening"],
+      ["time_of_day", "night"],
+      ["weather", "cold"],
+      ["weather", "mild"],
+      ["location_type", "indoor"],
+      ["accord", "amber"],
+      ["accord", "oriental"],
+      ["accord", "spicy"],
+      ["accord", "sweet"],
+      ["accord", "floral"],
+      ["accord", "resinous"],
+      ["note", "mandarin_orange"],
+      ["note", "rose"],
+      ["note", "jasmine"],
+      ["note", "orange_blossom"],
+      ["note", "cinnamon"],
+      ["note", "amber"],
+      ["note", "vanilla"],
+      ["note", "sandalwood"]
+    ]
+  },
+  {
+    "brand": "Chanel",
+    "name": "Bleu de Chanel Eau de Parfum",
+    "release_year": 2014,
+    "gender_category": "masculine",
+    "description": "Smooth, fresh, and elegant fragrance with citrus brightness, aromatic woods, and a refined amber-incense depth. Highly versatile and polished, it fits nearly any setting.",
+    "tags": [
+      ["season", "spring"],
+      ["season", "fall"],
+      ["season", "winter"],
+      ["occasion", "office"],
+      ["occasion", "casual"],
+      ["occasion", "formal"],
+      ["occasion", "date"],
+      ["time_of_day", "day"],
+      ["time_of_day", "evening"],
+      ["time_of_day", "night"],
+      ["weather", "mild"],
+      ["weather", "cold"],
+      ["location_type", "indoor"],
+      ["accord", "woody"],
+      ["accord", "citrus"],
+      ["accord", "aromatic"],
+      ["accord", "amber"],
+      ["accord", "fresh_spicy"],
+      ["accord", "smoky"],
+      ["note", "bergamot"],
+      ["note", "grapefruit"],
+      ["note", "ginger"],
+      ["note", "incense"],
+      ["note", "cedar"],
+      ["note", "sandalwood"],
+      ["note", "patchouli"],
+      ["note", "amberwood"]
     ]
   }
 

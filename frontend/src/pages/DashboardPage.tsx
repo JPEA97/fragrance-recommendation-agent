@@ -27,13 +27,16 @@ const steps = [
       { value: 'wedding' as Occasion, label: 'Wedding' },
       { value: 'formal' as Occasion, label: 'Formal' },
       { value: 'party' as Occasion, label: 'Party' },
+      { value: 'sport' as Occasion, label: 'Sport' },
+      { value: 'beach' as Occasion, label: 'Beach' },
+      { value: 'travel' as Occasion, label: 'Travel' },
     ],
   },
   {
     key: 'time_of_day' as const,
     question: 'What time of day is it?',
     options: [
-      { value: 'early_morning' as TimeOfDay, label: 'Early Morning' },
+      { value: 'morning' as TimeOfDay, label: 'Morning' },
       { value: 'day' as TimeOfDay, label: 'Day' },
       { value: 'evening' as TimeOfDay, label: 'Evening' },
       { value: 'night' as TimeOfDay, label: 'Night' },
@@ -61,8 +64,8 @@ const steps = [
 
 const stepLabels: Record<string, string> = {
   spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter',
-  casual: 'Casual', office: 'Office', date: 'Date', wedding: 'Wedding', formal: 'Formal', party: 'Party',
-  early_morning: 'Early Morning', day: 'Day', evening: 'Evening', night: 'Night',
+  casual: 'Casual', office: 'Office', date: 'Date', wedding: 'Wedding', formal: 'Formal', party: 'Party', sport: 'Sport', beach: 'Beach', travel: 'Travel',
+  morning: 'Morning', day: 'Day', evening: 'Evening', night: 'Night',
   hot: 'Hot', mild: 'Mild', cold: 'Cold', rainy: 'Rainy',
   indoor: 'Indoor', outdoor: 'Outdoor',
 }
