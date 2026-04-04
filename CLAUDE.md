@@ -10,12 +10,31 @@ Both the backend and frontend are fully implemented and working on `main`.
 
 ---
 
-## Current state (as of 2026-04-01)
+## Current state (as of 2026-04-04)
 
-- Backend: complete, all endpoints working, full integration + unit test coverage. No changes this session.
-- Frontend: complete. Significant UI overhaul this session — see changelog below.
-- Both `main` and `frontend-foundation` are in sync and pushed to origin.
-- Last commit: `feat: add About page accessible from landing and app navbar` (`063c23b`)
+- Backend: complete, all endpoints working, 19 tests passing. Recommendation engine overhauled this session.
+- Frontend: complete. New onboarding page, registration UX improvements, and expanded occasion options this session.
+- Last commit: `feat: registration UX, getting started page, and smarter recommendations` (`13b95fd`)
+- DB needs re-seeding to apply new tags: `python -m scripts.seed_catalog`
+
+### Changelog (2026-04-04)
+
+#### Registration & onboarding
+- **Password confirmation** — register form (both landing page tab and `/register`) has a confirm password field with real-time match feedback (green/red inline text while typing).
+- **Getting Started page** (`/getting-started`) — new protected route. New users land here after registration instead of `/dashboard`. Explains the 2-step workflow (build collection → get recommendation) with the 5 context factors. CTAs: "Add your first fragrance" and "Go to dashboard".
+
+#### Recommendation engine overhaul
+- **Rating bonus** — now scales 0–6 across the 1–10 range: rating 1–4 → +0, 5–6 → +2, 7–8 → +4, 9–10 → +6. Previously was `min(rating, 3)` which made ratings 4–10 all equivalent.
+- **Rotation penalty** — replaced `min(times_worn, 5)` with recency decay based on `last_worn_at`: worn today → -5, 2–3 days ago → -3, 4–7 days ago → -1, older or never worn → 0. The `last_worn_at` field on `CollectionItem` is now actively used.
+- **New occasions** — `sport`, `beach`, `travel` added to schema validation, dashboard step options, `ContextForm`, and `Occasion` type.
+- **Renamed `early_morning` → `morning`** — updated everywhere: catalog.json, schema, types, DashboardPage stepLabels, ContextForm.
+- **seed_catalog.py cleanup** — now deletes orphaned contextual tags (season/occasion/time_of_day/weather/location_type) that are no longer in catalog.json on every re-seed. Handles future renames automatically.
+
+#### Catalog tagging
+- **sport** applied to 12 fragrances: Allure Homme Sport, Cool Water, Acqua di Giò, Explorer Ultra Blue, Voyage, Hugo Man, Green Irish Tweed, Silver Mountain Water, CK One, Light Blue pour Homme, Man Eau Fraîche, Happy for Men.
+- **beach** applied to 12 fragrances: Acqua di Giò, AdG Profumo, AdG Profondo (deep/mineral entry), Virgin Island Water, Millesime Imperial, Neroli Portofino, Soleil Blanc, Cool Water, Light Blue (M+F), Explorer Ultra Blue, Hawas for Him.
+- **travel** applied to 10 fragrances: CK One, Colonia, Bleu de Chanel, Infusion d'Iris, Mémoire d'une Odeur, Neroli Portofino, Silver Mountain Water, Dylan Blue, Legend, Voyage.
+- **morning** added to: Cool Water, Acqua di Giò (in addition to the 5 fragrances that already had early_morning).
 
 ### Frontend changelog (2026-04-01)
 
@@ -91,7 +110,7 @@ The backend follows a strict layered pattern. Requests flow through:
 - `app/api/routes/` — HTTP handlers. Thin. Do dependency injection and call services or query the DB directly for simple cases.
 - `app/schemas/` — Pydantic request/response contracts. All API input validation lives here.
 - `app/models/` — SQLAlchemy ORM models. One file per table.
-- `app/services/recommendation.py` — The only service layer. Contains the recommendation scoring engine (context matching, rating bonus, times_worn penalty, top-3 selection).
+- `app/services/recommendation.py` — The only service layer. Contains the recommendation scoring engine (context matching, scaled rating bonus, recency decay penalty, top-3 selection).
 - `app/core/` — Config (pydantic-settings from `.env`), JWT security, logging setup, global error handlers.
 - `app/db/` — Engine and `SessionLocal` factory in `session.py`, `get_db` generator dep in `deps.py`, `Base` declarative class in `base.py`.
 
@@ -153,9 +172,15 @@ All errors follow:
 
 `app/services/recommendation.py::build_recommendations` receives raw DB rows `(CollectionItem, Fragrance, Brand, Tag)`, groups by collection item, scores each, and returns the top 3.
 
-Scoring weights: occasion +5, weather +5, season +3, time_of_day +3, location_type +3, personal_rating bonus (capped at 3), times_worn penalty (capped at 5). Tie-break: lower `times_worn` wins.
+**Context match scores:** occasion +5, weather +5, season +3, time_of_day +3, location_type +3.
 
-**Important**: fragrances with no tags are silently excluded because the query joins on `fragrance_tags`. This is intentional behavior.
+**Rating bonus (0–6):** rating 1–4 → +0, 5–6 → +2, 7–8 → +4, 9–10 → +6.
+
+**Recency penalty (uses `last_worn_at`):** worn today → -5, 2–3 days ago → -3, 4–7 days ago → -1, never worn or older than 7 days → 0.
+
+**Tie-break:** lower `times_worn` wins.
+
+**Important:** fragrances with no tags are silently excluded because the query joins on `fragrance_tags`. This is intentional behavior.
 
 ### Migrations
 
@@ -213,6 +238,7 @@ frontend/
     │   ├── AboutPage.tsx           # public about page, same visual style as landing
     │   ├── LoginPage.tsx           # standalone email + password form
     │   ├── RegisterPage.tsx        # standalone register form, auto-logs in after register
+    │   ├── GettingStartedPage.tsx  # onboarding page for new users, explains 2-step workflow
     │   ├── DashboardPage.tsx       # step-by-step context selector → recommendation results
     │   ├── CollectionPage.tsx      # 2-col grid, sticky header, always-visible filters, stats bar
     │   ├── CollectionItemPage.tsx  # detail view with inline edit, image header, delete-with-confirm
@@ -237,6 +263,7 @@ frontend/
 | About | `/about` | No |
 | Login | `/login` | No |
 | Register | `/register` | No |
+| Getting Started | `/getting-started` | Yes |
 | Dashboard | `/dashboard` | Yes |
 | My Collection | `/collection` | Yes |
 | Collection Item | `/collection/:id` | Yes |
@@ -308,7 +335,7 @@ If caching or background refetch becomes painful, TanStack Query is the agreed u
 
 ### Critical user flows
 
-**New user:** Landing (`/`) → scroll to auth → Register → auto-login → `/dashboard` → empty collection CTA → Add Fragrance → collection populated → Dashboard → Get Recommendation
+**New user:** Landing (`/`) → scroll to auth → Register (password + confirm password) → auto-login → `/getting-started` → "Add your first fragrance" → collection populated → `/dashboard` → Get Recommendation
 
 **Daily use:** Login → `/dashboard` → step-by-step context (season → occasion → time → weather → location, auto-advances) → loading phase → top 3 results. "Start over" resets the flow.
 
