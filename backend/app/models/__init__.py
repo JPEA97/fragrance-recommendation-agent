@@ -4,3 +4,4 @@ from app.models.fragrance import Fragrance
 from app.models.tag import Tag
 from app.models.fragrance_tag import FragranceTag
 from app.models.collection_item import CollectionItem
+from app.models.agent_session import AgentSession
