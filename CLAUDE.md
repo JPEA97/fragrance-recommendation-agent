@@ -10,12 +10,29 @@ Both the backend and frontend are fully implemented and working on `main`.
 
 ---
 
-## Current state (as of 2026-04-04)
+## Current state (as of 2026-04-08)
 
-- Backend: complete, all endpoints working, 19 tests passing. Recommendation engine overhauled this session.
-- Frontend: complete. New onboarding page, registration UX improvements, and expanded occasion options this session.
-- Last commit: `feat: registration UX, getting started page, and smarter recommendations` (`13b95fd`)
+- Backend: complete, all endpoints working, 19 tests passing. AI agent feature added this session.
+- Frontend: complete. Ask tab added to Dashboard this session.
+- Last commit: `feat: add Ask tab to dashboard with AI agent UI` (`e91007c`)
 - DB needs re-seeding to apply new tags: `python -m scripts.seed_catalog`
+
+### Changelog (2026-04-08)
+
+#### AI agent feature
+- **`app/services/agent.py`** — PydanticAI agent backed by `claude-haiku-4-5-20251001`. Two tools: `get_collection_context` (fetches user's collection with tags) and `score_fragrances` (wraps the existing scoring engine). `run_agent()` returns `(final_response, steps)`.
+- **`app/api/routes/agent.py`** — `POST /agent/recommend` endpoint. Auth-required. Runs the agent, saves the session to `agent_sessions`, returns `{ response, session_id }` wrapped in `ItemEnvelope`.
+- **`app/models/agent_session.py`** — new `AgentSession` model with fields: `user_id`, `query`, `steps` (JSON), `final_response`, `model_used`, `created_at`.
+- **Migration `d2c99cb3fe09`** — adds `agent_sessions` table.
+- **`app/core/config.py`** — added `anthropic_api_key` field (reads from `.env`). Set into `os.environ` in `agent.py` so PydanticAI picks it up.
+- **`frontend/src/api/agent.ts`** — `askAgent(query)` calls `POST /agent/recommend` via `apiPost`.
+- **Dashboard Ask tab** — new "Ask" tab alongside "Step by step". Textarea input, submit button, loading state, response card showing agent reply and session ID.
+
+#### Key decisions
+- Used PydanticAI over LangChain — lighter, type-safe, fits the existing Pydantic/FastAPI stack, forces understanding of tool-use primitives.
+- Two tools instead of one: agent calls `get_collection_context` first to understand the collection, then `score_fragrances` — this is genuinely agentic (tool ordering is decided by the LLM).
+- `anthropic_api_key` is read via `pydantic-settings` and set into `os.environ` at import time; PydanticAI reads it from there. The VS Code `.env` terminal injection warning is irrelevant — uvicorn loads it via pydantic-settings.
+- Agent requires API credits (separate from Claude subscription). Use `claude-haiku-4-5-20251001` to keep cost minimal.
 
 ### Changelog (2026-04-04)
 
@@ -167,6 +184,7 @@ All errors follow:
 | PATCH | `/collection/{id}` | Yes | Update ownership_type, ml_remaining, personal_rating, times_worn |
 | DELETE | `/collection/{id}` | Yes | Remove from collection (204) |
 | POST | `/recommendation/` | Yes | Get top-3 recommendations for a context |
+| POST | `/agent/recommend` | Yes | Natural language recommendation via AI agent, logs session |
 
 ### Recommendation engine
 

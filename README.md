@@ -1,39 +1,36 @@
-# Fragrance Collection API
+# S.O.T.D. — Scent of the Day
 
 ## Project Overview
 
-Fragrance Collection API is a backend system designed to recommend fragrances from a user’s personal collection based on contextual inputs such as season, occasion, time of day, weather, and location type.
+S.O.T.D. (Scent of the Day) is a full-stack fragrance recommendation app that helps users decide **what to wear next from what they already own**.
 
-Instead of recommending arbitrary products, the system focuses on helping users decide **what to wear next from what they already own**. The recommendation engine evaluates each fragrance in the user’s collection using a weighted scoring system that considers contextual matches, personal rating, and usage frequency.
-
-The API is designed around a structured backend architecture with authentication, relational data modeling, service-layer recommendation logic, and tested endpoint behavior.
+Users build a personal collection of fragrances, then get context-aware recommendations based on season, occasion, time of day, weather, and location. The app offers two recommendation modes: a guided step-by-step selector and a natural language AI agent that interprets free-form queries like *"something for a rainy evening date"* and autonomously picks the right scent.
 
 ---
 
 ## Core Features
 
-- User authentication with JWT-based login
+- User registration and JWT-based authentication
 - Personal fragrance collection management (CRUD)
-- Context-aware recommendation engine
-- Weighted scoring system with:
+- Context-aware recommendation engine with weighted scoring:
   - context matching (season, occasion, weather, time of day, location type)
-  - personal rating influence
-  - usage penalty (`times_worn`)
-- Top 3 recommendations per request
-- Human-readable explanation for each recommendation
-- Filtering and pagination for collection endpoints
+  - personal rating bonus (scaled 0–6 across the 1–10 range)
+  - recency decay penalty based on `last_worn_at`
+- Top 3 recommendations per request with human-readable explanations
+- **Natural language AI agent** — interprets free-form queries, calls the scoring engine as a tool, and returns a conversational recommendation
+- **Agent session logging** — every agent run is stored in the database with full tool call history for observability
+- Filtering and pagination for collection and catalog endpoints
 - Consistent API response structure using data envelopes
-- Standardized API error handling
-- Basic application logging and health check endpoint
-- Test coverage including:
-  - integration tests
-  - unit tests
+- Standardized error handling and application logging
+- React frontend with dark theme, step-by-step dashboard, and Ask tab
 
 ---
 
 ## Architecture Overview
 
-The backend follows a layered architecture to separate concerns and keep the codebase maintainable as complexity grows.
+### Backend
+
+The backend follows a strict layered architecture:
 
 - **Routes (`api/routes`)**
   - Handle HTTP requests and responses
@@ -48,8 +45,8 @@ The backend follows a layered architecture to separate concerns and keep the cod
   - Define relationships and constraints
 
 - **Services (`services`)**
-  - Contain business logic (e.g. recommendation scoring)
-  - Keep route handlers thin and focused
+  - `recommendation.py` — weighted scoring engine
+  - `agent.py` — PydanticAI agent with two tools: `get_collection_context` and `score_fragrances`
 
 - **Core (`core`)**
   - Configuration, security, logging, and global error handling
@@ -57,13 +54,21 @@ The backend follows a layered architecture to separate concerns and keep the cod
 - **Database (`db`)**
   - Session management and base model setup
 
-This separation ensures that business logic, data access, and API concerns remain decoupled and easier to maintain over time.
+### Frontend
+
+Pure SPA built with React 18 + TypeScript + Vite + Tailwind CSS. Key pages:
+
+- **Landing** — hero with tabbed sign-in / register
+- **Dashboard** — two tabs: step-by-step context wizard and AI Ask tab
+- **Collection** — grid view with filters and stats
+- **Add Fragrance** — catalog browser with search and modal
 
 ---
 
 ## Tech Stack
 
-- **Backend Framework:** FastAPI
+### Backend
+- **Framework:** FastAPI
 - **Language:** Python 3.11
 - **Database:** PostgreSQL
 - **ORM:** SQLAlchemy
@@ -71,6 +76,15 @@ This separation ensures that business logic, data access, and API concerns remai
 - **Authentication:** JWT (OAuth2 password flow)
 - **Testing:** Pytest + FastAPI TestClient
 - **Validation:** Pydantic
+
+### AI / Agent
+- **Agent framework:** PydanticAI
+- **LLM:** Anthropic Claude (`claude-haiku-4-5-20251001`)
+
+### Frontend
+- **Framework:** React 18 + TypeScript
+- **Build tool:** Vite
+- **Styling:** Tailwind CSS v3
 
 ---
 
@@ -80,48 +94,30 @@ This separation ensures that business logic, data access, and API concerns remai
 
 ```bash
 git clone https://github.com/JPEA97/fragrance-collection-api.git
-cd fragrance-collection-api/backend
+cd fragrance-collection-api
 ```
 
-### 2. Create and activate a virtual environment
+### 2. Backend setup
 
 ```bash
+cd backend
 python -m venv .venv
-source .venv/Scripts/activate
+source .venv/Scripts/activate   # Windows Git Bash
+pip install -r requirements.txt
 ```
 
-> On Windows Git Bash, the above activation path should work.  
-> On PowerShell, use:
->
-> `.venv\Scripts\Activate.ps1`
-
-### 3. Install dependencies
+### 3. Frontend setup
 
 ```bash
-pip install -r requirements.txt
+cd frontend
+npm install
 ```
 
 ---
 
 ## Environment Variables
 
-Create a `.env` file inside the `backend/` folder.
-
-You can use the included `.env.example` file as a template:
-
-```bash
-cp .env.example .env
-```
-
-> On Windows PowerShell, you can copy it with:
->
-> ```powershell
-> Copy-Item .env.example .env
-> ```
-
-Then update the values as needed.
-
-Example:
+Create a `.env` file inside the `backend/` folder:
 
 ```env
 DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/fragrance_db
@@ -130,44 +126,30 @@ ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 APP_NAME=Fragrance Collection API
 APP_VERSION=0.1.0
+ANTHROPIC_API_KEY=sk-ant-...your key here...
 ```
 
 ### Variable Reference
 
-- `DATABASE_URL`
-  - PostgreSQL connection string used by SQLAlchemy and Alembic
-
-- `SECRET_KEY`
-  - Secret used to sign JWT access tokens
-
-- `ALGORITHM`
-  - JWT signing algorithm (currently `HS256`)
-
-- `ACCESS_TOKEN_EXPIRE_MINUTES`
-  - Token expiration time in minutes
-
-- `APP_NAME`
-  - Application name exposed in API metadata
-
-- `APP_VERSION`
-  - Application version exposed in API metadata
+- `DATABASE_URL` — PostgreSQL connection string used by SQLAlchemy and Alembic
+- `SECRET_KEY` — Secret used to sign JWT access tokens
+- `ALGORITHM` — JWT signing algorithm (`HS256`)
+- `ACCESS_TOKEN_EXPIRE_MINUTES` — Token expiration time in minutes
+- `APP_NAME` — Application name exposed in API metadata
+- `APP_VERSION` — Application version exposed in API metadata
+- `ANTHROPIC_API_KEY` — API key for Anthropic Claude, used by the AI agent. Get yours at [console.anthropic.com](https://console.anthropic.com)
 
 ### Notes
 
-- `DATABASE_URL` should point to your local PostgreSQL database
 - `SECRET_KEY` should be replaced with a secure random value in real environments
 - `.env` should **never** be committed
-- `.env.example` should be committed as the configuration template
+- The Anthropic API key requires active API credits (separate from Claude subscriptions)
 
 ---
 
 ## Database & Migrations
 
-This project uses **Alembic** to manage database schema changes.
-
 ### 1. Create the PostgreSQL database
-
-Create a database called:
 
 ```text
 fragrance_db
@@ -175,77 +157,59 @@ fragrance_db
 
 ### 2. Apply migrations
 
-From the `backend/` folder, run:
+From the `backend/` folder:
 
 ```bash
 alembic upgrade head
 ```
 
-This will create all required tables in the database.
+This will create all required tables including `agent_sessions` for AI agent logging.
 
 ---
 
 ## Seed Data
 
-The project includes a seed script to populate a minimal fragrance catalog for development and testing.
-
-This script inserts:
-
-- brands
-- fragrances
-- tags
-- fragrance-tag relationships
-
-From the `backend/` folder, run:
+From the `backend/` folder:
 
 ```bash
 python -m scripts.seed_catalog
 ```
 
-After seeding, you will have enough catalog data to:
-
-- add fragrances to a user collection
-- test recommendation flows
-- validate filters and endpoints
+This populates brands, fragrances, tags, and fragrance-tag relationships. Re-run any time to apply catalog updates — the script is idempotent.
 
 ---
 
-## Running the API
+## Running the Project
 
-From the `backend/` folder, start the app with:
+Two servers must run simultaneously:
 
 ```bash
+# Terminal 1 — backend (from backend/)
+source .venv/Scripts/activate
 uvicorn app.main:app --reload
+
+# Terminal 2 — frontend (from frontend/)
+npm run dev
 ```
 
-The API will be available at:
-
-- App: `http://127.0.0.1:8000`
-- Health: `http://127.0.0.1:8000/health`
+- Backend: `http://127.0.0.1:8000`
+- Frontend: `http://localhost:5173`
 - Swagger Docs: `http://127.0.0.1:8000/docs`
+- Health: `http://127.0.0.1:8000/health`
 
 ---
 
 ## Authentication Flow
 
-The API uses JWT-based authentication with the OAuth2 password flow.
-
-### Flow Overview
-
-1. A user registers via `POST /users/`
-2. The user logs in via `POST /auth/login`
-3. The API returns a JWT access token
-4. The token must be included in protected requests:
+1. Register via `POST /users/`
+2. Log in via `POST /auth/login`
+3. Include the returned JWT in protected requests:
 
 ```http
 Authorization: Bearer <access_token>
 ```
 
-### Notes
-
-- The login endpoint uses the OAuth2 `username` field to receive the user's **email**
-- All protected endpoints resolve the authenticated user from the token
-- User ownership is enforced at the query level (e.g. collection items belong only to the authenticated user)
+The login endpoint uses the OAuth2 `username` field to receive the user's **email**. All protected endpoints resolve the authenticated user from the token. Collection items are always scoped to the authenticated user.
 
 ---
 
@@ -253,50 +217,38 @@ Authorization: Bearer <access_token>
 
 ### Auth
 
-- `POST /users/`  
-  Create a new user
+- `POST /users/` — Register a new user
+- `POST /auth/login` — Authenticate and return access token
+- `GET /users/me` — Get current authenticated user
 
-- `POST /auth/login`  
-  Authenticate user and return access token
+### Fragrances
 
-- `GET /users/me`  
-  Retrieve current authenticated user
-
----
+- `GET /fragrances/` — Browse catalog (search, brand filter, pagination)
+- `GET /fragrances/{id}` — Get fragrance detail
 
 ### Collection
 
-- `POST /collection/`  
-  Add a fragrance to the user’s collection
-
-- `GET /collection/`  
-  Retrieve collection (supports filtering and pagination)
-
-- `GET /collection/{id}`  
-  Retrieve a specific collection item
-
-- `PATCH /collection/{id}`  
-  Update collection item fields
-
-- `DELETE /collection/{id}`  
-  Remove item from collection
-
----
+- `POST /collection/` — Add a fragrance to the user's collection
+- `GET /collection/` — List collection (filters, pagination)
+- `GET /collection/{id}` — Get a single collection item
+- `PATCH /collection/{id}` — Update ownership type, rating, ml, wear count
+- `DELETE /collection/{id}` — Remove from collection
 
 ### Recommendation
 
-- `POST /recommendation/`  
-  Return top 3 fragrance recommendations based on context input
+- `POST /recommendation/` — Get top 3 scored recommendations for a given context
+
+### Agent
+
+- `POST /agent/recommend` — Natural language recommendation. Send a free-form query, get a conversational response. Every run is logged to `agent_sessions`.
 
 ---
 
 ## Recommendation Logic
 
-The recommendation engine evaluates each fragrance in the user’s collection using a weighted scoring system.
-
 ### Scoring Model
 
-Each fragrance receives a score based on:
+Each fragrance in the user's collection is scored against the provided context:
 
 - **Context matches**
   - Occasion → +5
@@ -305,61 +257,57 @@ Each fragrance receives a score based on:
   - Time of day → +3
   - Location type → +3
 
-- **Personal rating**
-  - Added as a bonus (capped)
+- **Personal rating bonus** (0–6)
+  - Rating 1–4 → +0
+  - Rating 5–6 → +2
+  - Rating 7–8 → +4
+  - Rating 9–10 → +6
 
-- **Usage penalty**
-  - Based on `times_worn`
-  - Prevents frequently used fragrances from dominating recommendations
+- **Recency decay penalty** (based on `last_worn_at`)
+  - Worn today → -5
+  - 2–3 days ago → -3
+  - 4–7 days ago → -1
+  - Older or never worn → 0
 
 ### Selection Rules
 
-- Only fragrances in the user’s collection are considered
-- Results are sorted by score (descending)
-- Top 3 results are returned
-- In case of a tie:
-  - Lower `times_worn` is preferred
-  - If still tied, selection is randomized
+- Only fragrances with tag mappings are considered (untagged fragrances are excluded)
+- Top 3 results are returned, sorted by score descending
+- Tie-break: lower `times_worn` wins
 
-### Output
+---
 
-Each recommendation includes:
+## AI Agent
 
-- fragrance name
-- brand
-- computed relevance
-- human-readable explanation ("reason")
+The `POST /agent/recommend` endpoint exposes a PydanticAI agent backed by Claude (`claude-haiku-4-5-20251001`).
+
+### How it works
+
+1. The user submits a natural language query (e.g. *"something fresh for a beach day"*)
+2. The agent calls `get_collection_context` to understand what the user owns
+3. The agent maps the query to structured context parameters and calls `score_fragrances`, which runs the existing scoring engine
+4. The agent returns a conversational response explaining its top pick
+5. The full tool call history and final response are saved to `agent_sessions`
+
+### Tools
+
+| Tool | Purpose |
+|---|---|
+| `get_collection_context` | Returns the user's collection with names, brands, ratings, and tags |
+| `score_fragrances` | Runs the scoring engine for a given context, returns top 3 |
+
+### Session logging
+
+Every agent run creates a row in `agent_sessions` with:
+- `query` — the original natural language input
+- `steps` — full JSON message history (tool calls + results)
+- `final_response` — the agent's conversational reply
+- `model_used` — the model identifier
+- `created_at` — timestamp
 
 ---
 
 ## Testing
-
-The project includes both **integration tests** and **unit tests**.
-
-### Integration Test Coverage
-
-Integration tests validate the behavior of the API end-to-end using `pytest` and FastAPI’s `TestClient`.
-
-Covered flows include:
-
-- Authentication flow
-- Unauthorized access handling
-- Collection ownership enforcement
-- Collection CRUD lifecycle
-- Filtering and pagination
-- Recommendation endpoint behavior and ranking
-
-### Unit Test Coverage
-
-Unit tests validate the recommendation scoring engine in isolation.
-
-Covered logic includes:
-
-- Top 3 result slicing
-- Stronger context matches ranking higher
-- Tie-breaking using lower `times_worn`
-- Reason generation
-- Empty input behavior
 
 ### Running Tests
 
@@ -369,19 +317,32 @@ From the `backend/` folder:
 pytest
 ```
 
+### Coverage
+
+**Integration tests** validate end-to-end API behavior:
+- Authentication and unauthorized access
+- Collection ownership enforcement
+- Collection CRUD lifecycle
+- Filtering and pagination
+- Recommendation endpoint ranking
+
+**Unit tests** validate the recommendation scoring engine in isolation:
+- Context match scoring
+- Rating bonus and recency penalty
+- Tie-breaking logic
+- Reason generation
+- Empty input behavior
+
 ### Notes
 
 - Integration tests use a separate SQLite test database
-- The application’s database dependency is overridden during tests
-- Each test runs with a clean schema to ensure isolation
-- Recommendation service unit tests run without database or API setup
+- Each test runs with a clean schema for isolation
+- A custom `unaccent()` SQLite shim mimics the PostgreSQL text search behavior
+
+---
 
 ## Operational Notes
 
-The API includes a lightweight operational layer to improve reliability and inspectability:
-
-- Global exception handlers for standardized error responses
-- Basic application logging for startup, auth events, collection mutations, and recommendation generation
+- Global exception handlers return standardized error envelopes
+- Application logging covers startup, auth events, collection mutations, recommendation generation, and agent runs
 - Health check endpoint at `/health`
-
-This keeps failure behavior more predictable and makes the backend easier to debug during development and testing.
