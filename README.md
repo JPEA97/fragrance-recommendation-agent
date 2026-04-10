@@ -1,4 +1,5 @@
 # S.O.T.D. — Scent of the Day
+### Agentic Fragrance Recommendation Platform
 
 ## Project Overview
 
