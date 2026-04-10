@@ -94,7 +94,7 @@ Pure SPA built with React 18 + TypeScript + Vite + Tailwind CSS. Key pages:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/JPEA97/fragrance-collection-api.git
+git clone https://github.com/JPEA97/fragrance-recommendation-agent.git
 cd fragrance-collection-api
 ```
 
