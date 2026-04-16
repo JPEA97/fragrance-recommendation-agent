@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(source .venv/Scripts/activate)",
+      "Bash(pytest tests/test_recommendation_service.py tests/test_recommendation.py -v)",
+      "Bash(pytest -q)",
+      "Bash(python3:*)",
+      "Bash(node:*)",
+      "WebSearch",
+      "WebFetch(domain:world.openbeautyfacts.org)"
+    ]
+  }
+}

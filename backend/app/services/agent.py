@@ -34,7 +34,7 @@ When a user asks for a recommendation, follow these steps in order:
    - weather: hot | mild | cold | rainy
    - location_type: indoor | outdoor
 3. Call score_fragrances with those parameters to get the ranked results.
-4. Return a warm, conversational 2-3 sentence response naming the top pick and briefly explaining why it fits.
+4. Return a warm, conversational 2-3 sentence response naming the top 2-3 picks and briefly explaining why each fits.
 
 Always call both tools before responding. If the user's query is ambiguous, make a reasonable inference."""
 
@@ -43,6 +43,11 @@ Always call both tools before responding. If the user's query is ambiguous, make
 class AgentDeps:
     db: Session
     user_id: int
+    top_picks: list = None
+
+    def __post_init__(self):
+        if self.top_picks is None:
+            self.top_picks = []
 
 
 agent = Agent(
@@ -132,6 +137,11 @@ def score_fragrances(
     if not results:
         return "No matching fragrances found for that context."
 
+    ctx.deps.top_picks = [
+        {"brand": entry["brand"].name, "name": entry["fragrance"].name}
+        for entry in results
+    ]
+
     lines = []
     for i, entry in enumerate(results, 1):
         lines.append(
@@ -154,4 +164,4 @@ def run_agent(query: str, db: Session, user_id: int) -> tuple[str, list]:
     steps = json.loads(result.all_messages_json())
 
     logger.info("Agent run complete user_id=%s steps=%d", user_id, len(steps))
-    return result.data, steps
+    return result.output, steps, deps.top_picks

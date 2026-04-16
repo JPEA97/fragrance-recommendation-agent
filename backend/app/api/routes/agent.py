@@ -19,9 +19,15 @@ class AgentRequest(BaseModel):
     query: str
 
 
+class FragrancePick(BaseModel):
+    brand: str
+    name: str
+
+
 class AgentResponse(BaseModel):
     response: str
     session_id: int
+    picks: list[FragrancePick]
 
 
 @router.post("/recommend", response_model=ItemEnvelope)
@@ -37,7 +43,7 @@ def agent_recommend(
         )
 
     try:
-        final_response, steps = run_agent(
+        final_response, steps, picks = run_agent(
             query=payload.query,
             db=db,
             user_id=current_user.id,
@@ -67,5 +73,5 @@ def agent_recommend(
     )
 
     return ItemEnvelope(
-        data=AgentResponse(response=final_response, session_id=session.id)
+        data=AgentResponse(response=final_response, session_id=session.id, picks=picks)
     )

@@ -10,12 +10,79 @@ Both the backend and frontend are fully implemented and working on `main`.
 
 ---
 
-## Current state (as of 2026-04-08)
+## Current state (as of 2026-04-16)
 
-- Backend: complete, all endpoints working, 19 tests passing. AI agent feature added this session.
-- Frontend: complete. Ask tab added to Dashboard this session.
-- Last commit: `feat: add Ask tab to dashboard with AI agent UI` (`e91007c`)
+- Backend: complete, all endpoints working, 19 tests passing.
+- Frontend: complete. Visual overhaul from 2026-04-14 is uncommitted (working but not yet in git).
+- Last commit: `feat: add Ask tab to dashboard with AI agent UI` (`e91007c`) — no new commits this session.
 - DB needs re-seeding to apply new tags: `python -m scripts.seed_catalog`
+
+### Changelog (2026-04-16)
+
+#### Agent bug fixes and Ask tab image support
+
+**`app/services/agent.py`**:
+- Fixed `result.data` → `result.output` (PydanticAI renamed this attribute in a newer version).
+- Added `top_picks: list` field to `AgentDeps`; the `score_fragrances` tool now populates it as a side effect with `[{brand, name}]` for each result.
+- `run_agent()` now returns a 3-tuple: `(final_response, steps, top_picks)`.
+- Updated system prompt: agent now mentions **top 2-3 picks** in its response (was "top pick").
+
+**`app/api/routes/agent.py`**:
+- Added `FragrancePick` Pydantic model `{brand: str, name: str}`.
+- Added `picks: list[FragrancePick]` to `AgentResponse`.
+- Unpacks the new 3-tuple from `run_agent()` and includes `picks` in the response envelope.
+
+**`frontend/src/api/agent.ts`**:
+- Added `FragrancePick` interface `{brand: string, name: string}`.
+- Added `picks: FragrancePick[]` to `AgentResponse`.
+
+**`frontend/src/pages/DashboardPage.tsx`**:
+- Imports `getFragranceImage` from `fragranceImages.ts`.
+- Ask tab response card now renders a horizontal image strip below the agent text — one tile per pick, filtered to only fragrances actually named in the response text (`response.toLowerCase().includes(pick.name.toLowerCase())`).
+- Each tile: square image with letter placeholder fallback, fragrance name, brand label below.
+
+### Changelog (2026-04-14)
+
+#### Frontend visual overhaul
+
+**`src/index.css`** — three new CSS keyframe animations:
+- `cardEntrance` + `.card-enter` — fade-in + rise from 20px, used by collection cards on load.
+- `floatGlow` + `.glow-float` — the dashboard background orb breathes (scale + translateY) over 9 s.
+- `dotPulse` + `.dot-active` — the active progress dot pulses gently.
+
+**`src/components/CollectionCard.tsx`** — complete redesign into portrait showcase cards:
+- Tall image area (h-52) at top; image zooms (`scale-105`) on hover.
+- Ownership badge floats over top-right of image with `backdrop-blur-sm`.
+- Hover: card lifts (`-translate-y-2`) + deep indigo shadow bloom + border goes indigo.
+- Letter placeholder uses an indigo gradient when no image.
+- Accepts `index` prop for staggered entrance animation (`animationDelay: index * 50ms`).
+
+**`src/pages/CollectionPage.tsx`** — grid changed from `grid-cols-1 sm:grid-cols-2` to `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4`. Passes `index` to each `CollectionCard`.
+
+**`src/components/RecommendationResult.tsx`** — #1 pick card greatly enlarged:
+- Image: `w-28 h-28` (md: `w-32 h-32`), padding `p-8`/`p-10`.
+- Title: `text-3xl`/`text-4xl`. Reason text: `text-base`.
+- Ghost rank number (`text-6xl font-black text-indigo-400/20`) in header row.
+
+**`src/pages/DashboardPage.tsx`** — major dashboard polish:
+- **Animated glow**: background orb wrapped in a flex-centered container + `glow-float` class (removes inline transform hack).
+- **Ghost step number**: huge `"01"`…`"05"` at near-zero opacity sits behind the question text for editorial depth.
+- **Gradient question text**: white → indigo-200 via `backgroundImage` + `bg-clip-text text-transparent`.
+- **Option buttons**: `hover:scale-105 hover:shadow-xl hover:shadow-indigo-600/25 active:scale-95` — tactile lift+glow.
+- **Active dot**: `.dot-active` pulsing class on current step dot.
+- **Loader**: counter-rotating double-ring (outer spins forward, inner spins reverse at 1.4 s).
+- **`stepColors` map**: each step key (season, occasion, time_of_day, weather, location_type) gets its own color family (emerald, indigo, amber, sky, zinc). Used in both breadcrumb chips and results context pills.
+- **Breadcrumb**: changed from plain text links to colored chip buttons matching step category.
+- **All phases vertically centered**: wizard tab wrapper has `justify-center flex-1`.
+- **Tab active state**: adds `shadow-lg shadow-indigo-900/50`.
+
+**`src/lib/fragranceImages.ts`** — 12 new image mappings added:
+- Burberry: `Brit for Men`, `Mr. Burberry`, `Her`, `Goddess`
+- Acqua di Parma: `Colonia`, `Colonia Essenza`, `Colonia Oud`, `Peonia Nobile`, `Iris Nobile`
+- Abercrombie & Fitch: `First Instinct`, `Authentic Men`
+- Givenchy: `Gentleman Society Ambree`
+
+---
 
 ### Changelog (2026-04-08)
 
@@ -60,7 +127,7 @@ Both the backend and frontend are fully implemented and working on `main`.
 - **Dashboard route** moved from `/` to `/dashboard`. Unauthenticated users redirect to `/` (not `/login`). Logout goes to `/`.
 - **About page** (`/about`) — public route, no login required. Accessible from landing page and navbar. Same visual style as landing page.
 - **Fragrance images** — static local files in `frontend/public/images/`. Mapped via `frontend/src/lib/fragranceImages.ts` using `"Brand::Name"` keys. 45+ images added. Images show in catalog tiles, collection cards, item detail, and recommendation results.
-- **Collection page** — 2-column grid, always-visible filters (no accordion), sticky header with stats bar.
+- **Collection page** — responsive 2/3/4-column grid, always-visible filters (no accordion), sticky header with stats bar. Cards are portrait showcase style with hover animations.
 - **Catalog page** — product tile cards (image area at top, letter placeholder for missing images), sticky search bar, 3–4 column grid.
 - **Layout** — subtle ambient indigo glow on all inner pages, navbar has `backdrop-blur`.
 - **SVG favicon** — indigo perfume bottle at `frontend/public/favicon.svg`.
@@ -258,7 +325,7 @@ frontend/
     │   ├── RegisterPage.tsx        # standalone register form, auto-logs in after register
     │   ├── GettingStartedPage.tsx  # onboarding page for new users, explains 2-step workflow
     │   ├── DashboardPage.tsx       # step-by-step context selector → recommendation results
-    │   ├── CollectionPage.tsx      # 2-col grid, sticky header, always-visible filters, stats bar
+    │   ├── CollectionPage.tsx      # 2/3/4-col responsive grid, sticky header, always-visible filters, stats bar
     │   ├── CollectionItemPage.tsx  # detail view with inline edit, image header, delete-with-confirm
     │   └── AddFragrancePage.tsx    # product tile catalog, sticky search, modal → add to collection
     ├── components/
@@ -266,7 +333,7 @@ frontend/
     │   ├── ProtectedRoute.tsx      # auth guard with loading spinner, wraps Layout
     │   ├── ContextForm.tsx         # 5-field toggle-button context selector (unused by dashboard, kept for reference)
     │   ├── RecommendationResult.tsx  # top pick card + 2 alternatives, shows fragrance images
-    │   └── CollectionCard.tsx      # clickable grid card with image thumbnail, ownership badge, stats
+    │   └── CollectionCard.tsx      # portrait showcase card — tall image area, hover lift+glow, staggered entrance animation
     ├── types/
     │   └── api.ts             # all TS types matching backend contracts
     ├── router.tsx             # BrowserRouter + AuthProvider + route tree
