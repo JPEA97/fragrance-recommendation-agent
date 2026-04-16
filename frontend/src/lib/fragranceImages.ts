@@ -44,6 +44,7 @@ const images: Record<string, string> = {
   'Louis Vuitton::Les Sables Roses': '/images/les-sables-roses.png',
   'Jean Paul Gaultier::Scandal Pour Homme': '/images/scandal.png',
   'Givenchy::Gentleman Society': '/images/gentleman.png',
+  'Givenchy::Gentleman Society Ambree': '/images/society-ambree.png',
   'Creed::Aventus Absolu': '/images/aventus-absolu.png',
   'Armaf::Club de Nuit Intense Man': '/images/cdnim.png',
   'Calvin Klein::CK One': '/images/ck-one.png',
@@ -71,6 +72,20 @@ const images: Record<string, string> = {
   'Creed::Aventus': '/images/aventus.png',
   'Montblanc::Legend EDP': '/images/legend-edp.png',
   'Montblanc::Explorer': '/images/explorer.png',
+  // Burberry
+  'Burberry::Brit for Men': '/images/brit-burberry.png',
+  'Burberry::Mr. Burberry': '/images/mr-burberry.png',
+  'Burberry::Her': '/images/burberry-her.png',
+  'Burberry::Goddess': '/images/goddess-burberry.png',
+  // Acqua di Parma
+  'Acqua di Parma::Colonia': '/images/colonia.png',
+  'Acqua di Parma::Colonia Essenza': '/images/colonia-essenza.png',
+  'Acqua di Parma::Colonia Oud': '/images/colonia-oud.png',
+  'Acqua di Parma::Peonia Nobile': '/images/adp-peonia.png',
+  'Acqua di Parma::Iris Nobile': '/images/adp-iris.png',
+  // Abercrombie & Fitch
+  'Abercrombie & Fitch::First Instinct': '/images/first-instinct.png',
+  'Abercrombie & Fitch::Authentic Men': '/images/authentic-man.png',
 }
 
 export function getFragranceImage(brand: string, name: string): string | null {

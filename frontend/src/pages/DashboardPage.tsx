@@ -4,6 +4,7 @@ import { useRecommendation } from '../hooks/useRecommendation'
 import RecommendationResult from '../components/RecommendationResult'
 import { askAgent } from '../api/agent'
 import type { AgentResponse } from '../api/agent'
+import { getFragranceImage } from '../lib/fragranceImages'
 import type { Occasion, LocationType, RecommendationRequest, Season, TimeOfDay, Weather } from '../types/api'
 
 // ── Step definitions ────────────────────────────────────────────────────────
@@ -70,6 +71,15 @@ const stepLabels: Record<string, string> = {
   morning: 'Morning', day: 'Day', evening: 'Evening', night: 'Night',
   hot: 'Hot', mild: 'Mild', cold: 'Cold', rainy: 'Rainy',
   indoor: 'Indoor', outdoor: 'Outdoor',
+}
+
+// Color per step category — used both in breadcrumb and results pills
+const stepColors: Record<string, string> = {
+  season:      'border-emerald-800/60 bg-emerald-950/50 text-emerald-300',
+  occasion:    'border-indigo-800/60  bg-indigo-950/50  text-indigo-300',
+  time_of_day: 'border-amber-800/60  bg-amber-950/50   text-amber-300',
+  weather:     'border-sky-800/60    bg-sky-950/50     text-sky-300',
+  location_type:'border-zinc-700/60  bg-zinc-900/60    text-zinc-300',
 }
 
 // ── Component ───────────────────────────────────────────────────────────────
@@ -140,9 +150,9 @@ export default function DashboardPage() {
     .slice(0, stepIndex)
     .map((s) => {
       const val = context[s.key] as string | undefined
-      return val ? stepLabels[val] : null
+      return val ? { label: stepLabels[val], stepKey: s.key, index: steps.indexOf(s) } : null
     })
-    .filter(Boolean) as string[]
+    .filter(Boolean) as { label: string; stepKey: string; index: number }[]
 
   // ── Ask helpers ────────────────────────────────────────────────────────
 
@@ -172,18 +182,18 @@ export default function DashboardPage() {
 
   return (
     <div className="relative -mx-4 -my-8 overflow-hidden" style={{ minHeight: 'calc(100vh - 3.5rem)' }}>
-      {/* Glow background */}
+      {/* Static base gradient */}
       <div
         className="absolute inset-0"
         style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 50%, #1e1b4b 0%, #09090b 65%)' }}
       />
-      <div
-        className="absolute w-[700px] h-[700px] rounded-full blur-3xl opacity-20 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)',
-          top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-        }}
-      />
+      {/* Animated floating glow orb */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div
+          className="w-[700px] h-[700px] rounded-full blur-3xl glow-float"
+          style={{ background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)' }}
+        />
+      </div>
 
       <div
         className="relative z-10 flex flex-col items-center px-6 py-12 transition-opacity duration-200"
@@ -195,7 +205,7 @@ export default function DashboardPage() {
             onClick={() => setActiveTab('wizard')}
             className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
               activeTab === 'wizard'
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50'
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
@@ -205,7 +215,7 @@ export default function DashboardPage() {
             onClick={() => setActiveTab('ask')}
             className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
               activeTab === 'ask'
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50'
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
@@ -215,28 +225,30 @@ export default function DashboardPage() {
 
         {/* ── Wizard tab ── */}
         {activeTab === 'wizard' && (
-          <div className="flex flex-col items-center w-full">
+          <div className="flex flex-col items-center justify-center w-full flex-1">
             {phase === 'steps' ? (
               <>
+                {/* Breadcrumb — colored chips per category */}
                 {breadcrumb.length > 0 && (
                   <div className="flex items-center gap-2 mb-10 flex-wrap justify-center">
                     {breadcrumb.map((crumb, i) => (
                       <span key={i} className="flex items-center gap-2">
                         <button
-                          onClick={() => advanceTo(i)}
-                          className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
+                          onClick={() => advanceTo(crumb.index)}
+                          className={`text-xs px-3 py-1 rounded-full border transition-opacity hover:opacity-80 ${stepColors[crumb.stepKey]}`}
                         >
-                          {crumb}
+                          {crumb.label}
                         </button>
                         {i < breadcrumb.length - 1 && (
-                          <span className="text-zinc-700">·</span>
+                          <span className="text-zinc-700">›</span>
                         )}
                       </span>
                     ))}
                   </div>
                 )}
 
-                <div className="flex items-center gap-1.5 mb-8">
+                {/* Progress dots */}
+                <div className="flex items-center gap-1.5 mb-10">
                   {steps.map((_, i) => (
                     <span
                       key={i}
@@ -244,23 +256,40 @@ export default function DashboardPage() {
                         i < stepIndex
                           ? 'w-4 h-1.5 bg-indigo-500'
                           : i === stepIndex
-                          ? 'w-6 h-1.5 bg-indigo-400'
+                          ? 'w-6 h-1.5 bg-indigo-400 dot-active'
                           : 'w-1.5 h-1.5 bg-zinc-700'
                       }`}
                     />
                   ))}
                 </div>
 
-                <h1 className="text-4xl md:text-6xl font-bold text-white text-center tracking-tight mb-12 max-w-xl">
-                  {steps[stepIndex].question}
-                </h1>
+                {/* Question with ghost step number behind it */}
+                <div className="relative flex justify-center mb-12 w-full max-w-xl">
+                  <span
+                    className="absolute -top-8 text-[170px] font-black leading-none select-none pointer-events-none"
+                    style={{ color: 'rgba(255,255,255,0.035)' }}
+                  >
+                    {String(stepIndex + 1).padStart(2, '0')}
+                  </span>
+                  <h1
+                    className="relative text-4xl md:text-6xl font-bold text-center tracking-tight max-w-xl bg-clip-text text-transparent"
+                    style={{ backgroundImage: 'linear-gradient(to bottom, #ffffff, #c7d2fe)' }}
+                  >
+                    {steps[stepIndex].question}
+                  </h1>
+                </div>
 
+                {/* Option buttons */}
                 <div className="flex flex-wrap justify-center gap-3 max-w-xl">
                   {steps[stepIndex].options.map((opt) => (
                     <button
                       key={opt.value}
                       onClick={() => select(opt.value)}
-                      className="px-7 py-3.5 rounded-2xl text-base font-medium border border-zinc-700 bg-zinc-900/80 text-zinc-200 hover:bg-indigo-600 hover:border-indigo-600 hover:text-white transition-all duration-150 backdrop-blur-sm"
+                      className="px-7 py-4 rounded-2xl text-base font-medium border border-zinc-700/80
+                                 bg-zinc-900/60 text-zinc-300 backdrop-blur-sm
+                                 hover:bg-indigo-600 hover:border-indigo-500 hover:text-white
+                                 hover:scale-105 hover:shadow-xl hover:shadow-indigo-600/25
+                                 active:scale-95 transition-all duration-200"
                     >
                       {opt.label}
                     </button>
@@ -270,7 +299,7 @@ export default function DashboardPage() {
                 {stepIndex > 0 && (
                   <button
                     onClick={() => advanceTo(stepIndex - 1)}
-                    className="mt-12 text-sm text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1.5"
+                    className="mt-12 text-sm text-zinc-600 hover:text-zinc-300 transition-colors flex items-center gap-1.5"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -280,19 +309,29 @@ export default function DashboardPage() {
                 )}
               </>
             ) : phase === 'loading' ? (
-              <div className="flex flex-col items-center gap-4 text-zinc-400">
-                <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-                <p className="text-sm tracking-widest uppercase">Finding your scent…</p>
+              /* Counter-rotating ring loader */
+              <div className="flex flex-col items-center gap-8">
+                <div className="relative w-16 h-16">
+                  <div className="absolute inset-0 rounded-full border border-indigo-900/50" />
+                  <div className="absolute inset-0 rounded-full border-t-2 border-indigo-400 animate-spin" />
+                  <div
+                    className="absolute inset-2 rounded-full border-t border-indigo-600/50 animate-spin"
+                    style={{ animationDuration: '1.4s', animationDirection: 'reverse' }}
+                  />
+                </div>
+                <p className="text-xs tracking-[0.35em] uppercase text-indigo-400/70">Finding your scent</p>
               </div>
             ) : (
+              /* Results */
               <div className="w-full max-w-xl">
+                {/* Colorful context pills */}
                 <div className="flex flex-wrap justify-center gap-2 mb-10">
                   {steps.map((s) => {
                     const val = context[s.key] as string | undefined
                     return val ? (
                       <span
                         key={s.key}
-                        className="text-xs px-3 py-1 rounded-full border border-indigo-800 bg-indigo-950/50 text-indigo-300"
+                        className={`text-xs px-3 py-1 rounded-full border ${stepColors[s.key]}`}
                       >
                         {stepLabels[val]}
                       </span>
@@ -325,7 +364,7 @@ export default function DashboardPage() {
 
                 <button
                   onClick={restart}
-                  className="mt-8 w-full py-2.5 rounded-xl text-sm font-medium border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors"
+                  className="mt-8 w-full py-2.5 rounded-xl text-sm font-medium border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-600 transition-colors"
                 >
                   Start over
                 </button>
@@ -339,14 +378,17 @@ export default function DashboardPage() {
           <div className="flex flex-col items-center w-full max-w-xl">
             {!askResponse ? (
               <>
-                <h1 className="text-4xl md:text-5xl font-bold text-white text-center tracking-tight mb-4 max-w-lg">
+                <h1
+                  className="text-4xl md:text-5xl font-bold text-center tracking-tight mb-4 max-w-lg bg-clip-text text-transparent"
+                  style={{ backgroundImage: 'linear-gradient(to bottom, #ffffff, #c7d2fe)' }}
+                >
                   What's the vibe?
                 </h1>
-                <p className="text-zinc-400 text-center mb-10 text-sm">
+                <p className="text-zinc-500 text-center mb-10 text-sm">
                   Describe your plans and the agent will pick the right scent from your collection.
                 </p>
 
-                <div className="w-full relative">
+                <div className="w-full">
                   <textarea
                     ref={textareaRef}
                     value={askQuery}
@@ -359,7 +401,9 @@ export default function DashboardPage() {
                     }}
                     placeholder="e.g. something for a rainy evening date downtown"
                     rows={3}
-                    className="w-full rounded-2xl bg-zinc-900/80 border border-zinc-700 text-white placeholder:text-zinc-500 px-5 py-4 text-base resize-none focus:outline-none focus:border-indigo-500 transition-colors backdrop-blur-sm"
+                    className="w-full rounded-2xl bg-zinc-900/60 border border-zinc-700/80 text-white placeholder:text-zinc-600
+                               px-5 py-4 text-base resize-none focus:outline-none focus:border-indigo-500/80
+                               transition-colors backdrop-blur-sm"
                   />
                 </div>
 
@@ -372,11 +416,14 @@ export default function DashboardPage() {
                 <button
                   onClick={submitAsk}
                   disabled={!askQuery.trim() || askLoading}
-                  className="mt-4 w-full py-3.5 rounded-2xl text-base font-medium bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 flex items-center justify-center gap-2"
+                  className="mt-4 w-full py-3.5 rounded-2xl text-base font-medium bg-indigo-600 text-white
+                             hover:bg-indigo-500 hover:shadow-xl hover:shadow-indigo-600/30
+                             disabled:opacity-40 disabled:cursor-not-allowed
+                             transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   {askLoading ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-white/60 border-t-white rounded-full animate-spin" />
                       Thinking…
                     </>
                   ) : (
@@ -384,26 +431,48 @@ export default function DashboardPage() {
                   )}
                 </button>
 
-                <p className="mt-4 text-xs text-zinc-600">Press Enter to submit · Shift+Enter for new line</p>
+                <p className="mt-4 text-xs text-zinc-700">Press Enter to submit · Shift+Enter for new line</p>
               </>
             ) : (
               <div className="w-full">
-                {/* Query echo */}
-                <p className="text-sm text-zinc-500 text-center mb-6 italic">"{askQuery}"</p>
+                <p className="text-sm text-zinc-600 text-center mb-6 italic">"{askQuery}"</p>
 
-                {/* Agent response */}
-                <div className="bg-indigo-950/50 border border-indigo-800 rounded-2xl p-6">
+                <div className="bg-indigo-950/40 border border-indigo-800/60 rounded-2xl p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="w-2 h-2 rounded-full bg-indigo-400" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
                     <span className="text-xs font-medium text-indigo-400 uppercase tracking-widest">Agent recommendation</span>
                   </div>
                   <p className="text-white text-base leading-relaxed whitespace-pre-wrap">{askResponse.response}</p>
-                  <p className="mt-4 text-xs text-zinc-600">Session #{askResponse.session_id}</p>
+
+                  {askResponse.picks.length > 0 && (
+                    <div className="flex gap-4 mt-6 pt-5 border-t border-indigo-800/40">
+                      {askResponse.picks.filter(pick =>
+                        askResponse.response.toLowerCase().includes(pick.name.toLowerCase())
+                      ).map((pick, i) => {
+                        const img = getFragranceImage(pick.brand, pick.name)
+                        return (
+                          <div key={i} className="flex flex-col items-center gap-2 flex-1">
+                            <div className="w-full aspect-square rounded-xl bg-zinc-900/60 border border-zinc-800/60 flex items-center justify-center overflow-hidden">
+                              {img ? (
+                                <img src={img} alt={pick.name} className="w-full h-full object-contain p-3" />
+                              ) : (
+                                <span className="text-4xl font-black text-indigo-400/20">{pick.name[0]}</span>
+                              )}
+                            </div>
+                            <p className="text-xs text-zinc-300 text-center font-medium leading-tight">{pick.name}</p>
+                            <p className="text-xs text-zinc-600 text-center">{pick.brand}</p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  <p className="mt-4 text-xs text-zinc-700">Session #{askResponse.session_id}</p>
                 </div>
 
                 <button
                   onClick={resetAsk}
-                  className="mt-6 w-full py-2.5 rounded-xl text-sm font-medium border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors"
+                  className="mt-6 w-full py-2.5 rounded-xl text-sm font-medium border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-600 transition-colors"
                 >
                   Ask again
                 </button>

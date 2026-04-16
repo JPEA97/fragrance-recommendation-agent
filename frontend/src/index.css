@@ -5,3 +5,37 @@
 body {
   @apply bg-zinc-950;
 }
+
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-enter {
+  opacity: 0;
+  animation: cardEntrance 0.45s ease-out forwards;
+}
+
+@keyframes floatGlow {
+  0%, 100% { opacity: 0.18; transform: scale(1) translateY(0px); }
+  50%       { opacity: 0.26; transform: scale(1.1) translateY(-28px); }
+}
+
+.glow-float {
+  animation: floatGlow 9s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+.dot-active {
+  animation: dotPulse 1.8s ease-in-out infinite;
+}

@@ -176,9 +176,9 @@ export default function CollectionPage() {
 
       {!loading && items.length > 0 && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {items.map((item) => (
-              <CollectionCard key={item.id} item={item} />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {items.map((item, i) => (
+              <CollectionCard key={item.id} item={item} index={i} />
             ))}
           </div>
 

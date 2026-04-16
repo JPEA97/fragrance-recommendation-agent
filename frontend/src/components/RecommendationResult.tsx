@@ -8,25 +8,25 @@ interface Props {
 function PrimaryCard({ item }: { item: RecommendationItem }) {
   const image = getFragranceImage(item.brand, item.name)
   return (
-    <div className="bg-indigo-950/50 border border-indigo-800 rounded-xl p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4 min-w-0">
-          {image && (
-            <img
-              src={image}
-              alt={item.name}
-              className="shrink-0 w-16 h-16 rounded-xl object-contain bg-indigo-950 border border-indigo-800 p-1.5"
-            />
-          )}
-          <div>
-            <p className="text-xs font-semibold text-indigo-400 uppercase tracking-wide mb-1">Top Pick</p>
-            <h2 className="text-xl font-bold text-white">{item.name}</h2>
-            <p className="text-sm text-zinc-400 mt-0.5">{item.brand}</p>
-          </div>
-        </div>
-        <span className="shrink-0 text-3xl">1</span>
+    <div className="bg-indigo-950/50 border border-indigo-700 rounded-2xl p-8 md:p-10 shadow-lg shadow-indigo-950/50">
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <p className="text-sm font-semibold text-indigo-400 uppercase tracking-widest">Top Pick</p>
+        <span className="shrink-0 text-6xl font-black text-indigo-400/20 leading-none">1</span>
       </div>
-      <p className="mt-4 text-sm text-zinc-300 leading-relaxed">{item.reason}</p>
+      <div className="flex items-center gap-6 min-w-0">
+        {image && (
+          <img
+            src={image}
+            alt={item.name}
+            className="shrink-0 w-28 h-28 md:w-32 md:h-32 rounded-2xl object-contain bg-indigo-950 border border-indigo-800 p-2"
+          />
+        )}
+        <div>
+          <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">{item.name}</h2>
+          <p className="text-base text-zinc-400 mt-1">{item.brand}</p>
+        </div>
+      </div>
+      <p className="mt-6 text-base text-zinc-300 leading-relaxed">{item.reason}</p>
     </div>
   )
 }
